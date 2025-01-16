@@ -56,16 +56,35 @@ export const login = async (req, res) => {
         if(!isPasswordCorrect){
             return res.status(400).json({msg: "Invalid credentials"})
         }
-        const token = await jwt.sign({id: existingUser._id}, process.env.JWT_SECRET, {expiresIn: "7d"})
+        const token = await jwt.sign({userId: existingUser._id}, process.env.JWT_SECRET, {expiresIn: "7d"})
 
+        res.cookie("token", token, {
+            httpOnly: true,
+            maxAge: 24*60*60*1000,
+            sameSite: "strict"
+        })
         res.status(200).json({
             success:true,
-            message: "User logged in successfully",
+            message: `Welcome back ${existingUser.username}`,
             user: existingUser,
             token
         })
     } catch (error) {
         console.log("Error in login Controller", error);
+        
+    }
+}
+
+
+export const logout = async (req, res) => {
+    try {
+        res.cookie("token", "",).clearCookie("token")
+       res.status(200).json({
+            success:true,
+            message: "Logged out successfully"
+        })
+    } catch (error) {
+        console.log("Error in logout Controller", error);
         
     }
 }
