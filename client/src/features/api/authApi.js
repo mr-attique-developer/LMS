@@ -1,10 +1,13 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { isLoggedIn } from '../authSlice';
 
 // Define a service using a base URL and expected endpoints
 export const authApi = createApi({
   reducerPath: 'authApi',
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:5000/api/v1/auth/' }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: 'http://localhost:5000/api/v1/auth/',
+    credentials: 'include',
+  }),
   endpoints: (builder) => ({
     registerUser: builder.mutation({
       query: (signupData) => ({
@@ -14,25 +17,24 @@ export const authApi = createApi({
       }),
     }),
     loginUser: builder.mutation({
-      query: (signupData) => ({
+      query: (loginData) => ({
         url: 'login',
         method: 'POST',
-        body: signupData,
+        body: loginData,
       }),
-      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+      async onQueryStarted(_, { queryFulfilled, dispatch }) {
         try {
-            const result = await queryFulfilled;
-            dispatch(isLoggedIn({user: result.data.user}))
+          const result = await queryFulfilled;
+          dispatch(isLoggedIn({ user: result.data.user }));
         } catch (error) {
-          console.error('Failed to fetch login query:', error)
-            
+          console.error('Login error:', error);
         }
-      }
+      },
     }),
   }),
-})
+});
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const {  useLoginUserMutation,useRegisterUserMutation} = authApi
-export default authApi.reducer
+export const { useLoginUserMutation, useRegisterUserMutation } = authApi;
+export default authApi.reducer;

@@ -10,7 +10,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useState } from "react";
+import {
+  useLoginUserMutation,
+  useRegisterUserMutation,
+} from "@/features/api/authApi";
+import { Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export default function Login() {
   const [loginInput, setLoginInput] = useState({ email: "", password: "" });
@@ -20,20 +26,41 @@ export default function Login() {
     password: "",
   });
 
+  const [loginUser, { data: LoginUserData, isSuccess: LoginUserIsSuccess, isError: LoginUserIsError, error: LoginUserError,  isLoading: LoginUserIsLoading }] = useLoginUserMutation();
+  const [registerUser, { data: RegisterUserData, isSuccess: RegisterUserIsSuccess, isError: RegisterUserIsError, error: RegisterUserError, isLoading: RegisterUserIsLoading }] = useRegisterUserMutation();
+
   const handleChange = (e, type) => {
-    if (type === "login") {
+    if (type === 'login') {
       setLoginInput({ ...loginInput, [e.target.name]: e.target.value });
-      // console.log(loginInput)
     } else {
       setSignupInput({ ...signupInput, [e.target.name]: e.target.value });
-      // console.log(signupInput)
     }
+  };
 
-  };  
-    const handleRegistration = (type) => {
-      const inputDataResult = type === "login" ? loginInput : signupInput;
-      console.log(inputDataResult);
-    };
+  const handleRegistration = async (type) => {
+    const inputDataResult = type === 'login' ? loginInput : signupInput;
+    const action = type === 'login' ? loginUser : registerUser;
+    await action(inputDataResult);
+  };
+
+  useEffect(() => {
+    if (LoginUserIsSuccess) {
+      toast.success(LoginUserData.message);
+    }
+    if (registerUser && RegisterUserIsSuccess) {
+      toast.success(RegisterUserData.message);
+    }
+    if (LoginUserIsError) {
+      console.log('LoginUserIsError:', LoginUserError);
+      const errorMessage = LoginUserError?.data?.message || 'Login Failed';
+      toast.error(errorMessage);
+    }
+    if (RegisterUserIsError) {
+      console.log('RegisterUserIsError:', RegisterUserError);
+      const errorMessage = RegisterUserError?.data?.message || 'Signup Failed';
+      toast.error(errorMessage);
+    }
+  }, [LoginUserIsError, RegisterUserIsError, LoginUserData, RegisterUserData, LoginUserIsSuccess, RegisterUserIsSuccess]);
   return (
     <div className="flex justify-center items-center h-screen">
       <Tabs defaultValue="login" className="w-[400px]">
@@ -79,7 +106,11 @@ export default function Login() {
                 className="w-full"
                 onClick={() => handleRegistration("login")}
               >
-                Login
+                {LoginUserIsLoading ? (
+                  <Loader2 className="animate-spin w-4 h-4 ml-2" />
+                ) : (
+                  "Login"
+                )}
               </Button>
             </CardFooter>
           </Card>
@@ -132,7 +163,11 @@ export default function Login() {
                 className="w-full"
                 onClick={() => handleRegistration("signup")}
               >
-                Sign Up
+                {RegisterUserIsLoading ? (
+                  <Loader2 className="animate-spin w-4 h-4 ml-2" />
+                ) : (
+                  "Signup"
+                )}
               </Button>
             </CardFooter>
           </Card>
