@@ -16,6 +16,7 @@ import {
 } from "@/features/api/authApi";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
+import {  useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 export default function Login() {
@@ -26,6 +27,8 @@ export default function Login() {
     password: "",
   });
 
+  const [activeTab, setActiveTab] = useState("login");
+  const navigate = useNavigate()
   const [loginUser, { data: LoginUserData, isSuccess: LoginUserIsSuccess, isError: LoginUserIsError, error: LoginUserError,  isLoading: LoginUserIsLoading }] = useLoginUserMutation();
   const [registerUser, { data: RegisterUserData, isSuccess: RegisterUserIsSuccess, isError: RegisterUserIsError, error: RegisterUserError, isLoading: RegisterUserIsLoading }] = useRegisterUserMutation();
 
@@ -43,12 +46,18 @@ export default function Login() {
     await action(inputDataResult);
   };
 
+
   useEffect(() => {
     if (LoginUserIsSuccess) {
       toast.success(LoginUserData.message);
+      setLoginInput({ email: "", password: "" });
+      navigate("/")
     }
     if (registerUser && RegisterUserIsSuccess) {
       toast.success(RegisterUserData.message);
+      setSignupInput({ username: "", email: "", password: "" });
+      setActiveTab("login")
+      
     }
     if (LoginUserIsError) {
       console.log('LoginUserIsError:', LoginUserError);
@@ -63,7 +72,7 @@ export default function Login() {
   }, [LoginUserIsError, RegisterUserIsError, LoginUserData, RegisterUserData, LoginUserIsSuccess, RegisterUserIsSuccess]);
   return (
     <div className="flex justify-center items-center h-screen">
-      <Tabs defaultValue="login" className="w-[400px]">
+      <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="w-[400px]" >
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="login">Login</TabsTrigger>
           <TabsTrigger value="signup">SignUp</TabsTrigger>

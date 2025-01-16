@@ -1,9 +1,9 @@
-import { Button } from "@/components/ui/button"
+import React from 'react'
 
-export default function Home() {
+const HeroSection = () => {
   return (
-    <div>
-      <Button>Click me</Button>
-    </div>
+    <div>HeroSection</div>
   )
 }
+
+export default HeroSection
