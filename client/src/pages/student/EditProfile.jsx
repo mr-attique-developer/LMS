@@ -39,8 +39,9 @@ const EditProfile = () => {
     formData.append("profilePhoto", profilePhoto)
     console.log(...formData)
     await updateUserProfile(formData)
-
-    console.log(name, profilePhoto);
+    setUsername("")
+    setProfilePhoto("")
+   
   };
 
   useEffect(()=>{
@@ -86,7 +87,7 @@ const EditProfile = () => {
             <div className="p-6">
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button>Edit Profile</Button>
+                  <Button onClick={() => setUsername(data?.user?.username)}>Edit Profile</Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
                   <DialogHeader>
@@ -125,7 +126,7 @@ const EditProfile = () => {
                     </div>
                   </div>
                   <DialogFooter>
-                    <Button type="submit" onClick={handleSubmit}>
+                    <Button type="submit" disabled={updateUserIsLoading} onClick={handleSubmit}>
                       {updateUserIsLoading ? (
                         <>
                           <Loader2 className="animate-spin w-4 h-4 ml-2" /> Wait

@@ -112,11 +112,14 @@ export default function Login() {
             </CardContent>
             <CardFooter>
               <Button
+              disabled={LoginUserIsLoading}
                 className="w-full"
                 onClick={() => handleRegistration("login")}
               >
                 {LoginUserIsLoading ? (
-                  <Loader2 className="animate-spin w-4 h-4 ml-2" />
+                  <>
+                  <Loader2 className="animate-spin w-4 h-4 ml-2" /> Wait Please
+                  </>
                 ) : (
                   "Login"
                 )}
@@ -169,11 +172,14 @@ export default function Login() {
             </CardContent>
             <CardFooter>
               <Button
+              disabled={RegisterUserIsLoading}
                 className="w-full"
                 onClick={() => handleRegistration("signup")}
               >
                 {RegisterUserIsLoading ? (
-                  <Loader2 className="animate-spin w-4 h-4 ml-2" />
+                  <>
+                  <Loader2 className="animate-spin w-4 h-4 ml-2" /> Wait Please
+                  </>
                 ) : (
                   "Signup"
                 )}

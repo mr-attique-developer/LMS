@@ -38,6 +38,13 @@ export const authApi = createApi({
       })
 
     }),
+    logoutUser : builder.mutation({
+      query:()=>({
+        url: "logout",
+        method: "GET"
+      })
+
+    }),
     updateUserProfile:builder.mutation({
       query:(formData)=>({
         url:"profile/update",
@@ -50,5 +57,5 @@ export const authApi = createApi({
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useLoginUserMutation, useRegisterUserMutation,useGetUserProfileQuery,useUpdateUserProfileMutation } = authApi;
+export const { useLoginUserMutation, useRegisterUserMutation,useGetUserProfileQuery,useUpdateUserProfileMutation, useLogoutUserMutation } = authApi;
 export default authApi.reducer;

@@ -1,5 +1,5 @@
 import { LogOut, Menu, School2 } from "lucide-react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { DarkMode } from "../DarkMode";
 import { Button } from "./ui/button";
 import {
@@ -13,23 +13,45 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import {  useGetUserProfileQuery, useLogoutUserMutation} from "@/features/api/authApi";
+import { toast } from "sonner";
 
 const Navbar = () => {
   const user = true;
   const role = "instructor";
+  const navigate = useNavigate()
+
+ const {data:userProfileData, refetch} =  useGetUserProfileQuery()  
+ console.log(userProfileData)
+const [ logoutUser , {data,  isSuccess, error , isError}] = useLogoutUserMutation()
+
+const handleLogout = async() => {
+  await logoutUser()
+}
+
+useEffect(()=>{
+  if(isSuccess){
+    refetch()
+    toast.success(data.message || "Logged out successfully")
+    navigate("/login")
+  }
+  if(isError){
+    toast.error(error.message || "Something wrong happened while logout")
+    navigate("/login")
+  }
+},[isSuccess, isError, error])
   return (
     <>
       {/* Desktop Screen */}
       <div className="flex justify-between items-center h-16 shadow-2xl sticky  right-0 top-0 left-0 bg-gray-50 dark:text-white dark:bg-black w-full z-40 px-4">
-
         <Link to={"/"}>
-        <div className=" items-center space-x-4 hidden md:flex">
-          <p>
-            <School2 />
-          </p>
-          <h1 className="text-2xl font-bold">Learning</h1>
-        </div>
+          <div className=" items-center space-x-4 hidden md:flex">
+            <p>
+              <School2 />
+            </p>
+            <h1 className="text-2xl font-bold">Learning</h1>
+          </div>
         </Link>
         <div className=" hidden md:flex items-center space-x-4">
           {user ? (
@@ -37,21 +59,17 @@ const Navbar = () => {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Avatar>
-                    <AvatarImage src="https://github.com/shadcn.png" />
+                    <AvatarImage src= {userProfileData?.user?.photoUrl ||"https://github.com/shadcn.png" }/>
                     <AvatarFallback>CN</AvatarFallback>
                   </Avatar>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56">
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuGroup>
-                    <Link to={"/my-learning"}>
-                    <DropdownMenuItem>My Learning</DropdownMenuItem>
-                    </Link>
-                    <Link to={"/profile"}>
-                    <DropdownMenuItem>Edit Profile</DropdownMenuItem>
-                    </Link>
-                    <DropdownMenuItem className="flex justify-between">
+                  <DropdownMenuGroup>                   
+                      <DropdownMenuItem> <Link to={"/my-learning"}>My Learning</Link></DropdownMenuItem>                    
+                      <DropdownMenuItem> <Link to={"/profile"}>Edit Profile</Link></DropdownMenuItem>
+                      <DropdownMenuItem className="flex justify-between cursor-pointer" onClick= {handleLogout}>
                       Log Out
                       <span>
                         <LogOut size={18} />
@@ -60,10 +78,9 @@ const Navbar = () => {
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>
-                    {
-                        role === "instructor" && <Button className="w-full">Dashboard</Button>
-                    }
-                   
+                    {role === "instructor" && (
+                      <Button className="w-full">Dashboard</Button>
+                    )}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -79,18 +96,20 @@ const Navbar = () => {
           </div>
         </div>
         <div className=" flex justify-between w-full md:hidden">
-          <MobileNavbar user={user} role={role} />
+          <MobileNavbar user={user} role={role}  logout = {handleLogout}/>
         </div>
       </div>
     </>
   );
 };
 
-const MobileNavbar = ({ user, role }) => {
+const MobileNavbar = ({ user, role, logout }) => {
   return (
     <>
       <div>
-        <h1 className="text-2xl font-bold"><Link to={"/"}>Learning</Link></h1>
+        <h1 className="text-2xl font-bold">
+          <Link to={"/"}>Learning</Link>
+        </h1>
       </div>
       <Sheet>
         <SheetTrigger asChild>
@@ -111,14 +130,17 @@ const MobileNavbar = ({ user, role }) => {
                     </div>
                   </div>
                   <hr />
-                  <p className="text-md"><Link to={"/my-learning"}>My Learning</Link></p>
-                  <p className="text-md"><Link to={"/profile"}>Edit Profile</Link></p>
-                  <p className="text-md">Logout</p>
+                  <p className="text-md">
+                    <Link to={"/my-learning"}>My Learning</Link>
+                  </p>
+                  <p className="text-md">
+                    <Link to={"/profile"}>Edit Profile</Link>
+                  </p>
+                  <p className="text-md cursor-pointer" onClick={logout}>Logout</p>
                   <hr />
-                  {
-                    role === "instructor" &&
-                  <Button className="w-full">Dashboard</Button>
-                  }
+                  {role === "instructor" && (
+                    <Button className="w-full">Dashboard</Button>
+                  )}
                 </div>
               </>
             ) : (
