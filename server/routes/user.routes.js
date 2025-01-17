@@ -8,7 +8,7 @@ router.route("/register").post(register)
 router.route("/login").post(login)
 router.route("/logout").get(logout)
 router.route("/profile").get(isAthenicated,getUserProfile)
-router.route("/profile/update").put(isAthenicated,multerUpload.single("profilePhoto"), updateUserProfile)
+router.route("/profile/update").put(isAthenicated, multerUpload.single("profilePhoto"), updateUserProfile)
 
 
 export default router

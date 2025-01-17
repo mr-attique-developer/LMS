@@ -37,11 +37,18 @@ export const authApi = createApi({
         method: "GET"
       })
 
+    }),
+    updateUserProfile:builder.mutation({
+      query:(formData)=>({
+        url:"profile/update",
+        method:"PUT",
+        body:formData
+      })
     })
   }),
 });
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useLoginUserMutation, useRegisterUserMutation,useGetUserProfileQuery } = authApi;
+export const { useLoginUserMutation, useRegisterUserMutation,useGetUserProfileQuery,useUpdateUserProfileMutation } = authApi;
 export default authApi.reducer;

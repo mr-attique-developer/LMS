@@ -130,7 +130,8 @@ export const getUserProfile = async (req, res) => {
 
 export const updateUserProfile = async (req, res) => {
   try {
-     const {name} = req.body
+     const {username} = req.body
+     console.log(username)
      const userId = req.id
      const profilePhoto = req.file
 
@@ -147,10 +148,14 @@ export const updateUserProfile = async (req, res) => {
       const publicId = await user.photoUrl.split("/").pop().split(".")[0]
       deleteFromCloudinary(publicId)
      }
+
+    //  upload a new photo
       const result = await uploadMediaToCloudinary(profilePhoto.path)
       const photoUrl = result.secure_url
 
-      const updateUser = await User.findByIdAndUpdate(userId, {name, photoUrl}, {new: true}).select("-password")
+      const updateData = { username, photoUrl}
+console.log(updateData)
+      const updateUser = await User.findByIdAndUpdate(userId, updateData, {new: true}).select("-password")
 
       res.status(200).json({
         success:true,

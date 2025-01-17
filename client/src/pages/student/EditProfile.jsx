@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -15,32 +15,48 @@ import { Input } from "@/components/ui/input";
 import SingleCourseComponent from "./SingleCourseComponent";
 import CourseSkeleton from "./CourseSkeleton";
 import { Loader2 } from "lucide-react";
-import { useGetUserProfileQuery } from "@/features/api/authApi";
+import { useGetUserProfileQuery, useUpdateUserProfileMutation } from "@/features/api/authApi";
+import { toast } from "sonner";
 
 const EditProfile = () => {
   //  geting user profile
 
-  const { data, isLoading } = useGetUserProfileQuery();
-  console.log(data  )
-  const [inputData, setInputData] = useState({
-    name: "",
-    profileImage: "",
-  });
+  const { data, isLoading ,refetch} = useGetUserProfileQuery();
+  // console.log(data);
+  // User profile update 
+  const [ updateUserProfile ,  {data:updateUserData, isLoading:updateUserIsLoading, isError, error, isSuccess,}] = useUpdateUserProfileMutation()
+  const [username, setUsername] = useState("");
+  const [profilePhoto, setProfilePhoto] = useState("");
 
   const handleChange = (e) => {
-    setInputData({
-      ...inputData,
-      [e.target.name]: e.target.value,
-    });
+    const file = e.target.files?.[0];
+    if (file) setProfilePhoto(file);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(inputData);
-    setInputData({ name: "", profileImage: "" });
+  const handleSubmit = async(e) => {
+    const formData = new FormData()
+    formData.append("username", username)
+    formData.append("profilePhoto", profilePhoto)
+    console.log(...formData)
+    await updateUserProfile(formData)
+
+    console.log(name, profilePhoto);
   };
 
-  if (isLoading) return <h1 className="text-2xl font-bold m-4 text-center">Profile Loading...</h1>;
+  useEffect(()=>{
+    if(isSuccess){
+      refetch()
+      toast.success(updateUserData.message || "Update Successful")
+    }
+    if(isError){
+      toast.error(error.data.message)
+    }
+  },[error, isError, isSuccess, updateUserData, updateUserIsLoading])
+
+  if (isLoading)
+    return (
+      <h1 className="text-2xl font-bold m-4 text-center">Profile Loading...</h1>
+    );
   return (
     <div className="max-w-4xl mx-auto mt-16 p-8">
       <div>
@@ -54,14 +70,18 @@ const EditProfile = () => {
           </Avatar>
           <div className="space-y-2 mt-4 md:mt-0">
             <h1 className="text-sm md:text-xl font-bold">
-              Name: <span className="text-md font-bold">{data?.user?.username}</span>
+              Name:{" "}
+              <span className="text-md font-bold">{data?.user?.username}</span>
             </h1>
             <h1 className="text-sm md:text-xl font-bold">
-              Email: <span className="text-md font-bold">{data?.user?.email}</span>
+              Email:{" "}
+              <span className="text-md font-bold">{data?.user?.email}</span>
             </h1>
             <h1 className="text-sm md:text-xl font-bold">
               Role:{" "}
-              <span className="uppercase text-md font-bold">{data?.user?.role}</span>
+              <span className="uppercase text-md font-bold">
+                {data?.user?.role}
+              </span>
             </h1>
             <div className="p-6">
               <Dialog>
@@ -84,9 +104,9 @@ const EditProfile = () => {
                       <Input
                         id="name"
                         placeholder="John Doe"
-                        name="name"
-                        value={inputData.name}
-                        onChange={handleChange}
+                        name="username"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
                         className="col-span-3"
                       />
                     </div>
@@ -96,17 +116,17 @@ const EditProfile = () => {
                       </Label>
                       <Input
                         id="profile"
-                        name="profileImage"
-                        value={inputData.profileImage}
-                        onChange={handleChange}
+                        name="profilePhoto"
                         type="file"
+                        accept="image/*"
+                        onChange={handleChange}
                         className="col-span-3"
                       />
                     </div>
                   </div>
                   <DialogFooter>
                     <Button type="submit" onClick={handleSubmit}>
-                      {isLoading ? (
+                      {updateUserIsLoading ? (
                         <>
                           <Loader2 className="animate-spin w-4 h-4 ml-2" /> Wait
                           Please
@@ -127,14 +147,14 @@ const EditProfile = () => {
           Courses you're enrolled in
         </h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {isLoading ? (
+          {updateUserIsLoading ? (
             Array(6)
               .fill()
               .map((_, i) => <CourseSkeleton key={i} />)
-          ) :data?.user?.enrolledCourses.length === 0 ? (
+          ) : data?.user?.enrolledCourses.length === 0 ? (
             <h1 className="text-center text-xl">No courses enrolled yet</h1>
           ) : (
-           data?.user?.enrolledCourses.map((course, index) => (
+            data?.user?.enrolledCourses.map((course, index) => (
               <SingleCourseComponent key={index} />
             ))
           )}
