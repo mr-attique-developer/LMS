@@ -21,7 +21,7 @@ const Navbar = () => {
   return (
     <>
       {/* Desktop Screen */}
-      <div className="flex justify-between items-center h-16 shadow-2xl sticky  right-0 top-0 left-0 w-full z-10 px-4">
+      <div className="flex justify-between items-center h-16 shadow-2xl sticky  right-0 top-0 left-0 bg-gray-50 dark:text-white dark:bg-black w-full z-40 px-4">
         <div className=" items-center space-x-4 hidden md:flex">
           <p>
             <School2 />
@@ -53,7 +53,10 @@ const Navbar = () => {
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>
-                    <Button className="w-full">Dashboard</Button>
+                    {
+                        role === "instructor" && <Button className="w-full">Dashboard</Button>
+                    }
+                   
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -105,7 +108,10 @@ const MobileNavbar = ({ user, role }) => {
                   <p className="text-md">Edit Profile</p>
                   <p className="text-md">Logout</p>
                   <hr />
+                  {
+                    role === "instructor" &&
                   <Button className="w-full">Dashboard</Button>
+                  }
                 </div>
               </>
             ) : (

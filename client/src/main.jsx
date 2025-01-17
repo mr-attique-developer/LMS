@@ -5,20 +5,17 @@ import App from './App.jsx'
 import { Provider } from 'react-redux'
 import { store } from './app/store'
 import { Toaster } from './components/ui/sonner'
-import { BrowserRouter } from 'react-router-dom'
 import { ThemeProvider } from './components/ThemeProvider'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Provider store={store}>
-    <BrowserRouter>
   
 <ThemeProvider>
 
     <App />
     <Toaster />
 </ThemeProvider>
-    </BrowserRouter>
     </Provider>
   </StrictMode>,
 )
