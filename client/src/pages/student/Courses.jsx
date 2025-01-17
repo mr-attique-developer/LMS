@@ -5,7 +5,7 @@ import CourseSkeleton from './CourseSkeleton'
 
 
 const Courses = () => {
-   const  isLoading = falses
+   const  isLoading = false
   return (
     <div className="flex flex-col items-center justify-center mt-8">
         <div className=' text-center '> 

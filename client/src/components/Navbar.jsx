@@ -22,12 +22,15 @@ const Navbar = () => {
     <>
       {/* Desktop Screen */}
       <div className="flex justify-between items-center h-16 shadow-2xl sticky  right-0 top-0 left-0 bg-gray-50 dark:text-white dark:bg-black w-full z-40 px-4">
+
+        <Link to={"/"}>
         <div className=" items-center space-x-4 hidden md:flex">
           <p>
             <School2 />
           </p>
           <h1 className="text-2xl font-bold">Learning</h1>
         </div>
+        </Link>
         <div className=" hidden md:flex items-center space-x-4">
           {user ? (
             <div className="flex items-center space-x-4">
@@ -42,8 +45,12 @@ const Navbar = () => {
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuGroup>
+                    <Link to={"/my-learning"}>
                     <DropdownMenuItem>My Learning</DropdownMenuItem>
+                    </Link>
+                    <Link to={"/my-profile"}>
                     <DropdownMenuItem>Edit Profile</DropdownMenuItem>
+                    </Link>
                     <DropdownMenuItem className="flex justify-between">
                       Log Out
                       <span>
