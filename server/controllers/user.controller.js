@@ -100,3 +100,28 @@ export const logout = async (req, res) => {
         
     }
 }
+
+
+export const getUserProfile = async (req, res) => {
+  try {
+    const userId = req.id
+    const user = await User.findById(userId).select("-password")
+
+    if(!user){
+      return res.status(400).json({message: "can not get user Profile"})
+    }
+
+    res.status(200).json({
+      success:true,
+      message: "User profile fetched successfully",
+      user
+    })
+
+  } catch (error) {
+    console.log("Error in getting user profile Controller", error);
+    return res.status(500).json({
+      success:false,
+      message:"Failed to get user profile"
+  }) 
+  }
+}
