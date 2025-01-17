@@ -48,7 +48,7 @@ const Navbar = () => {
                     <Link to={"/my-learning"}>
                     <DropdownMenuItem>My Learning</DropdownMenuItem>
                     </Link>
-                    <Link to={"/my-profile"}>
+                    <Link to={"/profile"}>
                     <DropdownMenuItem>Edit Profile</DropdownMenuItem>
                     </Link>
                     <DropdownMenuItem className="flex justify-between">
@@ -90,7 +90,7 @@ const MobileNavbar = ({ user, role }) => {
   return (
     <>
       <div>
-        <h1 className="text-2xl font-bold">Learning</h1>
+        <h1 className="text-2xl font-bold"><Link to={"/"}>Learning</Link></h1>
       </div>
       <Sheet>
         <SheetTrigger asChild>
@@ -111,8 +111,8 @@ const MobileNavbar = ({ user, role }) => {
                     </div>
                   </div>
                   <hr />
-                  <p className="text-md">My Learning</p>
-                  <p className="text-md">Edit Profile</p>
+                  <p className="text-md"><Link to={"/my-learning"}>My Learning</Link></p>
+                  <p className="text-md"><Link to={"/profile"}>Edit Profile</Link></p>
                   <p className="text-md">Logout</p>
                   <hr />
                   {

@@ -5,6 +5,7 @@ import Navbar from './components/Navbar';
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import Courses from './pages/student/Courses';
 import MyLearning from './pages/student/MyLearning';
+import EditProfile from './pages/student/EditProfile';
 
 const AppLayout = () => (
   <>
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
       {
         path: "/my-learning",
         element: <MyLearning />,
+      },
+      {
+        path: "/profile",
+        element: <EditProfile />,
       },
       {
         path: "/login",
