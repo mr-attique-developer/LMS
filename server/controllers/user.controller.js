@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
+import { deleteFromCloudinary, uploadMediaToCloudinary } from "../utils/cloudinary.js";
 
 export const register = async (req, res) => {
   try {
@@ -122,5 +123,46 @@ export const getUserProfile = async (req, res) => {
       success:false,
       message:"Failed to get user profile"
   }) 
+  }
+}
+
+
+
+export const updateUserProfile = async (req, res) => {
+  try {
+     const {name} = req.body
+     const userId = req.id
+     const profilePhoto = req.file
+
+     const user = await User.findById(userId)
+     if(!user){
+       return res.status(400).json(
+        {
+          success: false,
+          message: "User not found"
+        })
+
+     }
+     if(user.photoUrl){
+      const publicId = await user.photoUrl.split("/").pop().split(".")[0]
+      deleteFromCloudinary(publicId)
+     }
+      const result = await uploadMediaToCloudinary(profilePhoto.path)
+      const photoUrl = result.secure_url
+
+      const updateUser = await User.findByIdAndUpdate(userId, {name, photoUrl}, {new: true}).select("-password")
+
+      res.status(200).json({
+        success:true,
+        message: "User profile updated successfully",
+        user: updateUser
+      })
+  } catch (error) {
+    console.log("Error in updating user profile Controller", error);
+    return res.status(500).json({
+      success:false,
+      message:"Failed to update user profile"
+  })
+    
   }
 }
