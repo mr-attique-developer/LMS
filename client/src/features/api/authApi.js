@@ -31,10 +31,17 @@ export const authApi = createApi({
         }
       },
     }),
+    getUserProfile : builder.query({
+      query:()=>({
+        url: "profile",
+        method: "GET"
+      })
+
+    })
   }),
 });
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useLoginUserMutation, useRegisterUserMutation } = authApi;
+export const { useLoginUserMutation, useRegisterUserMutation,useGetUserProfileQuery } = authApi;
 export default authApi.reducer;

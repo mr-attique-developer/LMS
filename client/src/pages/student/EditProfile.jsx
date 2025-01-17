@@ -15,10 +15,13 @@ import { Input } from "@/components/ui/input";
 import SingleCourseComponent from "./SingleCourseComponent";
 import CourseSkeleton from "./CourseSkeleton";
 import { Loader2 } from "lucide-react";
+import { useGetUserProfileQuery } from "@/features/api/authApi";
 
 const EditProfile = () => {
-  const isLoading = false;
-  const enrolledCourses = [1,2,3];
+  //  geting user profile
+
+  const { data, isLoading } = useGetUserProfileQuery();
+  console.log(data  )
   const [inputData, setInputData] = useState({
     name: "",
     profileImage: "",
@@ -37,24 +40,28 @@ const EditProfile = () => {
     setInputData({ name: "", profileImage: "" });
   };
 
+  if (isLoading) return <h1 className="text-2xl font-bold m-4 text-center">Profile Loading...</h1>;
   return (
     <div className="max-w-4xl mx-auto mt-16 p-8">
       <div>
         <h1 className="font-bold text-2xl uppercase mb-6">Profile</h1>
         <div className="flex flex-col md:flex-row items-center gap-8">
           <Avatar className="w-24 h-24 md:w-36 md:h-36">
-            <AvatarImage src="https://github.com/shadcn.png" />
+            <AvatarImage
+              src={data?.user?.photoUrl || "https://github.com/shadcn.png"}
+            />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
           <div className="space-y-2 mt-4 md:mt-0">
             <h1 className="text-sm md:text-xl font-bold">
-              Name: <span className="text-md font-bold">Attique</span>
+              Name: <span className="text-md font-bold">{data?.user?.username}</span>
             </h1>
             <h1 className="text-sm md:text-xl font-bold">
-              Email: <span className="text-md font-bold">Attique@gmail.com</span>
+              Email: <span className="text-md font-bold">{data?.user?.email}</span>
             </h1>
             <h1 className="text-sm md:text-xl font-bold">
-              Role: <span className="uppercase text-md font-bold">Instructor</span>
+              Role:{" "}
+              <span className="uppercase text-md font-bold">{data?.user?.role}</span>
             </h1>
             <div className="p-6">
               <Dialog>
@@ -65,7 +72,8 @@ const EditProfile = () => {
                   <DialogHeader>
                     <DialogTitle>Edit profile</DialogTitle>
                     <DialogDescription>
-                      Make changes to your profile here. Click save when you're done.
+                      Make changes to your profile here. Click save when you're
+                      done.
                     </DialogDescription>
                   </DialogHeader>
                   <div className="grid gap-4 py-4">
@@ -100,7 +108,8 @@ const EditProfile = () => {
                     <Button type="submit" onClick={handleSubmit}>
                       {isLoading ? (
                         <>
-                          <Loader2 className="animate-spin w-4 h-4 ml-2" /> Wait Please
+                          <Loader2 className="animate-spin w-4 h-4 ml-2" /> Wait
+                          Please
                         </>
                       ) : (
                         "Save changes"
@@ -114,15 +123,21 @@ const EditProfile = () => {
         </div>
       </div>
       <div className="mt-8">
-        <h1 className="font-semibold text-xl mb-6">Courses you're enrolled in</h1>
+        <h1 className="font-semibold text-xl mb-6">
+          Courses you're enrolled in
+        </h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {isLoading
-            ? Array(6)
-                .fill()
-                .map((_, i) => <CourseSkeleton key={i} />)
-            : enrolledCourses.length === 0
-            ? <h1 className="text-center text-xl">No courses enrolled yet</h1>
-            : enrolledCourses.map((course) => <SingleCourseComponent key={course.id} />)}
+          {isLoading ? (
+            Array(6)
+              .fill()
+              .map((_, i) => <CourseSkeleton key={i} />)
+          ) :data?.user?.enrolledCourses.length === 0 ? (
+            <h1 className="text-center text-xl">No courses enrolled yet</h1>
+          ) : (
+           data?.user?.enrolledCourses.map((course, index) => (
+              <SingleCourseComponent key={index} />
+            ))
+          )}
         </div>
       </div>
     </div>

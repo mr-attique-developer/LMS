@@ -15,8 +15,8 @@ const isAthenicated = async (req, res, next) => {
     }
 
     req.id = decode.userId
-    console.log(decode)
-    console.log(req.id)
+    // console.log(decode)
+    // console.log(req.id)
     next()
      } catch (error) {
         console.log("Error in isAthenicated Middleware", error);
