@@ -8,7 +8,7 @@ const Sidebar = () => {
     <>
       <div className="flex flex-row gap-1 md:flex-row">
         {/* for mobile screen */}
-        <div className="md:hidden mt-5">
+        <div className="md:hidden mt-5 fixed">
           <Sheet>
             <SheetTrigger asChild>
               <button className="p-2">
@@ -39,7 +39,7 @@ const Sidebar = () => {
             </SheetContent>
           </Sheet>
         </div>
-        <div className="hidden w-[300px] md:flex flex-row min-h-[90vh] bg-gray-200 dark:bg-slate-800 shadow-2xl p-4">
+        <div className="hidden w-[300px] md:flex flex-row min-h-[90vh] bg-gray-200 dark:bg-slate-800 shadow-2xl p-4 fixed ">
           <div>
             <h1 className="text-2xl font-bold cursor-pointer">Admin Panel</h1>
             <Link
@@ -57,7 +57,10 @@ const Sidebar = () => {
             </Link>
           </div>
         </div>
-        <Outlet />
+        <main className="md:ml-[250px] ml-6 p-4">
+      <Outlet />
+    </main>
+       
       </div>
     </>
   );

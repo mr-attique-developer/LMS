@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Table,
   TableBody,
@@ -9,15 +9,31 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useGetCreaterCoursesQuery } from "@/features/api/courseApi";
+import { Badge } from "@/components/ui/badge";
+import { Edit, Loader2 } from "lucide-react";
 
 const AdminCoursePage = () => {
+
+  const navigate = useNavigate()
+
+  const {data , isLoading , refetch,error, isSuccess} = useGetCreaterCoursesQuery()
+
+  console.log(data)
+useEffect(()=>{
+  refetch()
+},[isSuccess, error , isLoading])
+
+  if(isLoading) return <div>Loading...</div>
   return (
     <>
       <div className="md:p-16 p-2 mt-4 w-full ">
         <div>
+        <Link to={"create"}>
           <Button className="py-4 px-6">
-            <Link to={"create"}>Creat a new Course</Link>
+           Creat a new Course
           </Button>
+           </Link>
         </div>
         <div className="mt-4">
           <Table className="overflow-x-auto">
@@ -30,15 +46,14 @@ const AdminCoursePage = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {Array(6)
-                .fill()
-                .map((_, i) => (
-                  <TableRow key={i}>
-                    <TableCell colSpan={3}>Introduction to Next.js</TableCell>
-                    <TableCell>$500.00</TableCell>
-                    <TableCell>Pending</TableCell>
+              {data?.courses
+                .map((course, i) => (
+                  <TableRow key={course._id}>
+                    <TableCell colSpan={3}>{course.title}</TableCell>
+                    <TableCell>{course.price || "NA"}</TableCell>
+                    <TableCell><Badge className={"py-2 px-4"}>{ course.isPublished||"Pending"}</Badge></TableCell>
                     <TableCell className="text-right ">
-                      <Button>View</Button>
+                      <Button onClick={()=> navigate(course._id)}><Edit/></Button>
                     </TableCell>
                   </TableRow>
                 ))}

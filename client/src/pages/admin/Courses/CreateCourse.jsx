@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {  Loader2 } from "lucide-react";
 import { useCreateCourseMutation } from "@/features/api/courseApi";
 import { toast } from "sonner";
@@ -20,9 +20,10 @@ const CreateCourse = () => {
   // const isLoading = false
   const [title,seTitle] = useState("")
   const [category,setCategory] = useState("")
+  const navigate = useNavigate()
 
   const [createCourse, {data, isLoading, error, isError, isSuccess}] = useCreateCourseMutation()
-  console.log(createCourse)
+  // console.log(createCourse)
 
   const handleFormData = async()=>{
     console.log("Title",title)
@@ -30,10 +31,11 @@ const CreateCourse = () => {
     const data = {title, category}
     await createCourse(data)
   }
-
+  
   useEffect(()=>{
     if(isSuccess){
       toast.success(data.message|| "Course created successful")
+      navigate("/admin/courses")
       seTitle("")
       setCategory("")
     }

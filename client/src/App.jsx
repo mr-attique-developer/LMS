@@ -10,6 +10,7 @@ import Sidebar from './pages/admin/Sidebar';
 import CreateCourse from './pages/admin/Courses/CreateCourse';
 import Dashboard from './pages/admin/Dashboard/Dashboard';
 import AdminCoursePage from './pages/admin/Courses/AdminCoursePage';
+import UpdateCoursePage from './pages/admin/Courses/UpdateCoursePage';
 
 const AppLayout = () => (
   <>
@@ -64,6 +65,10 @@ const router = createBrowserRouter([
           {
             path:"courses/create",
             element:<CreateCourse/>
+          },
+          {
+            path:"courses/:courseId",
+            element:<UpdateCoursePage/>
           },
         ]
 
