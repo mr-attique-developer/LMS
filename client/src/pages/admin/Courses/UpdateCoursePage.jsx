@@ -19,27 +19,80 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import { Loader2 } from "lucide-react";
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useParams } from "react-router-dom";
 
 const UpdateCoursePage = () => {
   let course = true;
   let isLoading = false;
+  const params = useParams();
+  const courseId = params.courseId;
+  // console.log(courseId);
+  const [inputData, setInputData] = useState({
+    title: "",
+    subTitle: "",
+    description: "",
+    category: "",
+    level: "",
+    price: "",
+    courseThumbnail: "",
+  });
+
+  const [previewImage, setPreviewImage] = useState("");
+  const handleChange = (e) => {
+    
+    setInputData({
+      ...inputData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleCategoryChange = (value) => {
+    setInputData({
+      ...inputData,
+      category: value,
+    });
+  };
+
+  const handleLevelChange = (value) => {
+    setInputData({
+      ...inputData,
+      level: value,
+    });
+  };
+
+
+  const handleFileChange = (e)=>{
+    const file = e.target.files?.[0];
+    if(file){
+      setInputData({...inputData, courseThumbnail:file})
+      const reader = new FileReader()
+      reader.onloadend = ()=>{
+        setPreviewImage(reader.result)
+      }
+    reader.readAsDataURL(file)
+     
+    }
+
+  }
+  const handleSubmit = () => {
+    console.log(inputData);
+  };
+
   return (
     <div className="md:p-16 p-2 mt-4 w-full">
       <div className="flex justify-between items-center ">
-        <h1 className="md:text-xl md:font-bold font-medium text-sm   ">
+        <h1 className="md:text-xl md:font-bold font-medium text-sm">
           Add detail information regarding course
         </h1>
         <div>
-          <h1 className="hover:text-blue-500 hover:underline  text-sm md:text-xl">
-            {" "}
+          <h1 className="hover:text-blue-500 hover:underline text-sm md:text-xl">
             <Link to={"lecture"}> Go to Lecture Page</Link>
           </h1>
         </div>
       </div>
 
-      {/* Update course form  */}
+      {/* Update course form */}
       <div className="mt-8">
         <Card>
           <CardHeader>
@@ -47,7 +100,7 @@ const UpdateCoursePage = () => {
               <div>
                 <CardTitle>Basic Infomation</CardTitle>
                 <CardDescription className="text-xs md:text-base">
-                  Make Changes to your course here. And click save when you'r
+                  Make Changes to your course here. And click save when you're
                   done
                 </CardDescription>
               </div>
@@ -62,20 +115,35 @@ const UpdateCoursePage = () => {
           <CardContent>
             <div>
               <Label>Title</Label>
-              <Input className="p-2 " placeholder="Enter course title" />
+              <Input
+                className="p-2"
+                placeholder="Enter course title"
+                name="title"
+                value={inputData.title}
+                onChange={handleChange}
+              />
             </div>
             <div>
               <Label className="mt-3">Subtitle</Label>
-              <Input className="p-2 " placeholder="Enter course subtitle" />
+              <Input
+                className="p-2"
+                placeholder="Enter course subtitle"
+                value={inputData.subTitle}
+                name="subTitle"
+                onChange={handleChange}
+              />
             </div>
             <div>
-              <Label className="mt-3">Descrption</Label>
-              <RichTextEditor />
+              <Label className="mt-3">Description</Label>
+              <RichTextEditor
+                inputData={inputData.description}
+                setInputData={setInputData}
+              />
             </div>
-            <div className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mt-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mt-3">
               <div>
                 <Label>Category</Label>
-                <Select>
+                <Select onValueChange={handleCategoryChange}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select Category" />
                   </SelectTrigger>
@@ -103,7 +171,7 @@ const UpdateCoursePage = () => {
               </div>
               <div>
                 <Label>Course Level</Label>
-                <Select>
+                <Select onValueChange={handleLevelChange}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select Level" />
                   </SelectTrigger>
@@ -120,24 +188,43 @@ const UpdateCoursePage = () => {
               <div>
                 <Label>Price</Label>
                 <Input
-                  className="p-2 "
+                  className="p-2"
                   placeholder="Enter course price"
                   type="number"
+                  name="price"
+                  value={inputData.price}
+                  onChange={handleChange}
                 />
               </div>
             </div>
             <div className="mt-3">
-                <Label>Course Thumbnail</Label>
-                <Input type="file" className="md:w-[250px] "/>
+              <Label>Course Thumbnail</Label>
+              <Input type="file"
+               accept="image/*" 
+               className="md:w-[250px]" 
+               onChange={handleFileChange}
+               />
+               <div>
+                {
+                  previewImage && (
+                    <img src={previewImage} alt="course thumbnail" className="w-20 h-20 object-cover mt-2"/>
+                  )
+                }
+               </div>
             </div>
             <div className="mt-3 flex items-center gap-2">
+              <Link to={"/admin/courses"}>
                 <Button variant="outline"> Cancel</Button>
-                <Button  disabled={isLoading}> {
-                    isLoading ?
-                     <>
-                     <Loader2 className="animate-spin" /> Wait Please
-                    </>: "Save"
-            }</Button>
+              </Link>
+              <Button disabled={isLoading} onClick={handleSubmit}>
+                {isLoading ? (
+                  <>
+                    <Loader2 className="animate-spin" /> Wait Please
+                  </>
+                ) : (
+                  "Save"
+                )}
+              </Button>
             </div>
           </CardContent>
         </Card>
