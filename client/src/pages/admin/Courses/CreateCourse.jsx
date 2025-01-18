@@ -1,6 +1,6 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-dropdown-menu";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Select,
   SelectContent,
@@ -13,16 +13,34 @@ import {
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import {  Loader2 } from "lucide-react";
+import { useCreateCourseMutation } from "@/features/api/courseApi";
+import { toast } from "sonner";
 
 const CreateCourse = () => {
-  const isLoading = false
+  // const isLoading = false
   const [title,seTitle] = useState("")
   const [category,setCategory] = useState("")
 
-  const handleFormData = ()=>{
+  const [createCourse, {data, isLoading, error, isError, isSuccess}] = useCreateCourseMutation()
+  console.log(createCourse)
+
+  const handleFormData = async()=>{
     console.log("Title",title)
     console.log("Category",category)
+    const data = {title, category}
+    await createCourse(data)
   }
+
+  useEffect(()=>{
+    if(isSuccess){
+      toast.success(data.message|| "Course created successful")
+      seTitle("")
+      setCategory("")
+    }
+    if(isError){
+      toast.error(error.data.message)
+    }
+  }, [data, isError, isSuccess, isLoading, error])
   return (
     <>
       <div className="md:p-16 p-2 w-full overflow-hidden">
@@ -56,10 +74,10 @@ const CreateCourse = () => {
                 <SelectLabel>Category</SelectLabel>
                 <SelectItem value="nextjs">Next js </SelectItem>
                 <SelectItem value="reactjs">React js</SelectItem>
-                <SelectItem value="mongodb">MongoDB</SelectItem>
-                <SelectItem value="fullStackDevelopment">Full Stack Development</SelectItem>
-                <SelectItem value="mernStackDevelopment">MERN Stack Development</SelectItem>
-                <SelectItem value="js">Javascript</SelectItem>
+                <SelectItem value="mongoDB">MongoDB</SelectItem>
+                <SelectItem value="FullStackDevelopment">Full Stack Development</SelectItem>
+                <SelectItem value="MernStackDevelopment">MERN Stack Development</SelectItem>
+                <SelectItem value="javascript">Javascript</SelectItem>
                 <SelectItem value="html">HTML</SelectItem>
                 <SelectItem value="css">Css</SelectItem>
                 <SelectItem value="redux">Redux & Redux toolkit</SelectItem>
