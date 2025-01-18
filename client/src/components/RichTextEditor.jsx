@@ -11,7 +11,7 @@ import 'react-quill/dist/quill.snow.css';
     })
   }
 
-  return <ReactQuill theme="snow" value={inputData} onChange={handleInputData}  />;
+  return <ReactQuill theme="snow" value={inputData.description} onChange={handleInputData}  />;
 }
 
 

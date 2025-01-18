@@ -17,17 +17,25 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  useUpdateCreaterCourseMutation,
+} from "@/features/api/courseApi";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import { Loader2 } from "lucide-react";
-import React, { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { toast } from "sonner";
 
 const UpdateCoursePage = () => {
   let course = true;
-  let isLoading = false;
+  const navigate = useNavigate();
+  // let isLoading = false;
   const params = useParams();
   const courseId = params.courseId;
   // console.log(courseId);
+  const [updateCreaterCourse, { data, isError, isLoading, isSuccess, error }] =
+    useUpdateCreaterCourseMutation();
+    console.log(data)
   const [inputData, setInputData] = useState({
     title: "",
     subTitle: "",
@@ -40,7 +48,6 @@ const UpdateCoursePage = () => {
 
   const [previewImage, setPreviewImage] = useState("");
   const handleChange = (e) => {
-    
     setInputData({
       ...inputData,
       [e.target.name]: e.target.value,
@@ -61,23 +68,44 @@ const UpdateCoursePage = () => {
     });
   };
 
-
-  const handleFileChange = (e)=>{
+  const handleFileChange = (e) => {
     const file = e.target.files?.[0];
-    if(file){
-      setInputData({...inputData, courseThumbnail:file})
-      const reader = new FileReader()
-      reader.onloadend = ()=>{
-        setPreviewImage(reader.result)
-      }
-    reader.readAsDataURL(file)
-     
+    if (file) {
+      setInputData({ ...inputData, courseThumbnail: file });
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewImage(reader.result);
+      };
+      reader.readAsDataURL(file);
     }
-
-  }
-  const handleSubmit = () => {
-    console.log(inputData);
   };
+
+  const handleCourseUpdateSubmit = async () => {
+    console.log("clicked")
+    const formData = new FormData();
+    formData.append("title", inputData.title);
+    formData.append("subTitle", inputData.subTitle);
+    formData.append("description", inputData.description);
+    formData.append("category", inputData.category);
+    formData.append("level", inputData.level);
+    formData.append("price", inputData.price);
+    formData.append("courseThumbnail", inputData.courseThumbnail);
+    console.log(formData)
+    console.log(inputData)
+    await updateCreaterCourse({courseData: formData, courseId });
+  };
+
+  console.log(inputData)
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success(data.message || "Course updated successful");
+      navigate("/admin/courses")
+    }
+    if (isError) {
+      toast.error(error.data.message || "Something went wrong");
+    }
+  }, [isSuccess, isError, data, error, isLoading]);
 
   return (
     <div className="md:p-16 p-2 mt-4 w-full">
@@ -136,7 +164,7 @@ const UpdateCoursePage = () => {
             <div>
               <Label className="mt-3">Description</Label>
               <RichTextEditor
-                inputData={inputData.description}
+                inputData={inputData}
                 setInputData={setInputData}
               />
             </div>
@@ -199,24 +227,27 @@ const UpdateCoursePage = () => {
             </div>
             <div className="mt-3">
               <Label>Course Thumbnail</Label>
-              <Input type="file"
-               accept="image/*" 
-               className="md:w-[250px]" 
-               onChange={handleFileChange}
-               />
-               <div>
-                {
-                  previewImage && (
-                    <img src={previewImage} alt="course thumbnail" className="w-20 h-20 object-cover mt-2"/>
-                  )
-                }
-               </div>
+              <Input
+                type="file"
+                accept="image/*"
+                className="md:w-[250px]"
+                onChange={handleFileChange}
+              />
+              <div>
+                {previewImage && (
+                  <img
+                    src={previewImage}
+                    alt="course thumbnail"
+                    className="w-20 h-20 object-cover mt-2"
+                  />
+                )}
+              </div>
             </div>
             <div className="mt-3 flex items-center gap-2">
               <Link to={"/admin/courses"}>
                 <Button variant="outline"> Cancel</Button>
               </Link>
-              <Button disabled={isLoading} onClick={handleSubmit}>
+              <Button disabled={isLoading} onClick={handleCourseUpdateSubmit}>
                 {isLoading ? (
                   <>
                     <Loader2 className="animate-spin" /> Wait Please

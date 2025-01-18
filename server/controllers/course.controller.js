@@ -15,6 +15,7 @@ const creater = req.id
 const course = new Course({
     title,
     category,
+
     creater
 })
 
@@ -47,9 +48,9 @@ export const getCreaterCoursesController = async (req, res) => {
       //         message: "User not found"
       //     })
       // }
-      console.log({userId})
+      // console.log({userId})
       const courses = await Course.find({creater: userId})
-      console.log(courses)
+      // console.log(courses)
 
       if(!courses){
           return res.status(404).json({
@@ -77,7 +78,9 @@ export const updateCreaterCourseController = async (req, res) => {
   try {
     const courseId  = req.params.courseId
     const { title, subTitle , level , category, description, price} = req.body 
-    const thambnail = req.file
+    const courseThumbnail = req.file
+    // console.log(courseId)
+    //  console.log(courseThumbnail)
 
     const course = await Course.findById(courseId)
     if(!course){
@@ -87,15 +90,19 @@ export const updateCreaterCourseController = async (req, res) => {
         })
     }
 
-    if(course.courseThumbnail){
+    let thumbnail
+    if(courseThumbnail){
 
-      const publicId = course.courseThumbnail.split("/").pop().split(".")[0]
-      deleteFromCloudinary(publicId)
+      if(course.courseThumbnail){
+        
+        const publicId = course.courseThumbnail.split("/").pop().split(".")[0]
+        deleteFromCloudinary(publicId)
+      }
+      const result = await uploadMediaToCloudinary(courseThumbnail?.path)
+      thumbnail = result?.secure_url
     }
-    const result = await uploadMediaToCloudinary(thambnail?.path)
-    const courseThumbnail = result.secure_url
 
-    const updatedData = { title, subTitle , level , category, description, price , courseThumbnail: courseThumbnail} 
+    const updatedData = { title, subTitle , level , category, description, price , courseThumbnail: thumbnail} 
 
     const updatedCourse = await Course.findByIdAndUpdate(courseId, updatedData, {new: true})
 
