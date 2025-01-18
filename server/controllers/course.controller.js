@@ -1,4 +1,5 @@
 import Course from "../models/course.model.js";
+import { deleteFromCloudinary, uploadMediaToCloudinary } from "../utils/cloudinary.js";
 
 export const createCourseController = async (req, res) => {
   try {
@@ -69,4 +70,45 @@ export const getCreaterCoursesController = async (req, res) => {
         message: "Error in get creater courses controller",
       });
     }
+}
+
+
+export const updateCreaterCourseController = async (req, res) => {
+  try {
+    const courseId  = req.params.courseId
+    const { title, subTitle , level , category, description, price} = req.body 
+    const thambnail = req.file
+
+    const course = await Course.findById(courseId)
+    if(!course){
+        return res.status(404).json({
+            success: false,
+            message: "Course not found"
+        })
+    }
+
+    if(course.courseThumbnail){
+
+      const publicId = course.courseThumbnail.split("/").pop().split(".")[0]
+      deleteFromCloudinary(publicId)
+    }
+    const result = await uploadMediaToCloudinary(thambnail?.path)
+    const courseThumbnail = result.secure_url
+
+    const updatedData = { title, subTitle , level , category, description, price , courseThumbnail: courseThumbnail} 
+
+    const updatedCourse = await Course.findByIdAndUpdate(courseId, updatedData, {new: true})
+
+    return res.status(200).json({
+      success:true,
+      message: "Course updated successfully",
+      updatedCourse
+    })
+  } catch (error) {
+    console.log( "Error in update creater courses controller", error);
+    res.status(500).json({
+      success: false,
+      message: "Error in update creater  courses controller",
+    });
+  }
 }
