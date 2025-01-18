@@ -4,9 +4,7 @@ import { Link } from "react-router-dom";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -15,7 +13,7 @@ import {
 const AdminCoursePage = () => {
   return (
     <>
-      <div className="p-16 w-full ">
+      <div className="md:p-16 p-2 w-full ">
         <div>
           <Button className="py-4 px-6">
             <Link to={"create"}>Creat a new Course</Link>
@@ -23,7 +21,6 @@ const AdminCoursePage = () => {
         </div>
         <div className="mt-4">
           <Table>
-          
             <TableHeader>
               <TableRow>
                 <TableHead colSpan={3}>Title</TableHead>
