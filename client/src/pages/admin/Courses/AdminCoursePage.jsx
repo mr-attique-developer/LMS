@@ -13,14 +13,14 @@ import {
 const AdminCoursePage = () => {
   return (
     <>
-      <div className="md:p-16 p-2 w-full ">
+      <div className="md:p-16 p-2 mt-4 w-full ">
         <div>
           <Button className="py-4 px-6">
             <Link to={"create"}>Creat a new Course</Link>
           </Button>
         </div>
         <div className="mt-4">
-          <Table>
+          <Table className="overflow-x-auto">
             <TableHeader>
               <TableRow>
                 <TableHead colSpan={3}>Title</TableHead>

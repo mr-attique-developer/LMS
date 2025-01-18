@@ -1,5 +1,5 @@
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { ChartColumnIncreasing, LibraryBig, Menu } from "lucide-react";
+import { ChartColumnIncreasing, ChartNoAxesGantt, LibraryBig, Menu } from "lucide-react";
 import React from "react";
 import { Link, Outlet } from "react-router-dom";
 
@@ -8,11 +8,11 @@ const Sidebar = () => {
     <>
       <div className="flex flex-row gap-1 md:flex-row">
         {/* for mobile screen */}
-        <div className="md:hidden">
+        <div className="md:hidden mt-5">
           <Sheet>
             <SheetTrigger asChild>
               <button className="p-2">
-                <Menu className="w-6 h-6" />
+                <ChartNoAxesGantt className="w-6 h-6" />
               </button>
             </SheetTrigger>
 
