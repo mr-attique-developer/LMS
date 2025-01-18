@@ -33,3 +33,40 @@ res.status(201).json({
     });
   }
 };
+
+
+
+export const getCreaterCoursesController = async (req, res) => {
+    try {
+      const userId = req.id
+      console.log(userId)
+      // if(!userId){
+      //     return res.status(400).json({
+      //         success: false,
+      //         message: "User not found"
+      //     })
+      // }
+      console.log({userId})
+      const courses = await Course.find({creater: userId})
+      console.log(courses)
+
+      if(!courses){
+          return res.status(404).json({
+              success: false,
+              message: "No courses found"
+          })
+      }
+
+      return res.status(200).json({
+        success:true,
+        message: "Courses Fetched Successfully",
+        courses
+      })
+    } catch (error) {
+      console.log( "Error in get creater courses controller", error);
+      res.status(500).json({
+        success: false,
+        message: "Error in get creater courses controller",
+      });
+    }
+}
