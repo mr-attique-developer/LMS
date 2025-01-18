@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { isLoggedIn } from '../authSlice';
+import { isLoggedIn, isLoggedOut } from '../authSlice';
 
 // Define a service using a base URL and expected endpoints
 export const authApi = createApi({
@@ -35,14 +35,30 @@ export const authApi = createApi({
       query:()=>({
         url: "profile",
         method: "GET"
-      })
+      }),
+      async onQueryStarted(_, { queryFulfilled, dispatch }) {
+        try {
+          const result = await queryFulfilled;
+          dispatch(isLoggedIn({ user: result.data.user }));
+        } catch (error) {
+          console.error('Login error:', error);
+        }
+      }
 
     }),
     logoutUser : builder.mutation({
       query:()=>({
         url: "logout",
         method: "GET"
-      })
+      }), 
+      async onQueryStarted(_, { queryFulfilled, dispatch }) {
+        try {
+          dispatch(isLoggedOut())
+          
+        } catch (error) {
+          console.log("Error in logout user query", error)
+        }
+      }
 
     }),
     updateUserProfile:builder.mutation({

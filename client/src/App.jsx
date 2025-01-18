@@ -6,6 +6,10 @@ import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import Courses from './pages/student/Courses';
 import MyLearning from './pages/student/MyLearning';
 import EditProfile from './pages/student/EditProfile';
+import Sidebar from './pages/admin/Sidebar';
+import CreateCourse from './pages/admin/Courses/CreateCourse';
+import Dashboard from './pages/admin/Dashboard/Dashboard';
+import AdminCoursePage from './pages/admin/Courses/AdminCoursePage';
 
 const AppLayout = () => (
   <>
@@ -42,6 +46,28 @@ const router = createBrowserRouter([
         path: "/login",
         element: <Login />,
       },
+
+      // Admin routing
+
+      {
+        path: "/admin",
+        element:<Sidebar/>,
+        children:[
+          {
+            path:"dashboard",
+            element:<Dashboard/>
+          },
+          {
+            path:"courses",
+            element:<AdminCoursePage/>
+          },
+          {
+            path:"courses/create",
+            element:<CreateCourse/>
+          },
+        ]
+
+      }
     ],
   },
 ]);

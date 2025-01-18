@@ -7,3 +7,12 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(authApi.middleware),
 });
+
+
+const getRidFromRefreshing = async() => {
+await store.dispatch(authApi.endpoints.getUserProfile.initiate({}, {forceRefetch: true}))
+
+  
+}
+
+getRidFromRefreshing()

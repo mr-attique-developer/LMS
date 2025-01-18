@@ -14,16 +14,19 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
 import { Link, useNavigate } from "react-router-dom";
-import {  useGetUserProfileQuery, useLogoutUserMutation} from "@/features/api/authApi";
+import {  useLogoutUserMutation} from "@/features/api/authApi";
 import { toast } from "sonner";
+import { useSelector } from "react-redux";
 
 const Navbar = () => {
-  const user = true;
+  // const user = true;
   const role = "instructor";
   const navigate = useNavigate()
+  const {user} = useSelector((state)=> state.auth)
+  console.log(user)
 
- const {data:userProfileData, refetch} =  useGetUserProfileQuery()  
- console.log(userProfileData)
+//  const {data:userProfileData, refetch} =  useGetUserProfileQuery()  
+//  console.log(userProfileData)
 const [ logoutUser , {data,  isSuccess, error , isError}] = useLogoutUserMutation()
 
 const handleLogout = async() => {
@@ -32,7 +35,6 @@ const handleLogout = async() => {
 
 useEffect(()=>{
   if(isSuccess){
-    refetch()
     toast.success(data.message || "Logged out successfully")
     navigate("/login")
   }
@@ -59,7 +61,7 @@ useEffect(()=>{
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Avatar>
-                    <AvatarImage src= {userProfileData?.user?.photoUrl ||"https://github.com/shadcn.png" }/>
+                    <AvatarImage src= {user?.photoUrl ||"https://github.com/shadcn.png" }/>
                     <AvatarFallback>CN</AvatarFallback>
                   </Avatar>
                 </DropdownMenuTrigger>
@@ -78,8 +80,8 @@ useEffect(()=>{
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>
-                    {role === "instructor" && (
-                      <Button className="w-full">Dashboard</Button>
+                    {user?.role === "instructor" && (
+                      <Button className="w-full" > <Link to={"/admin/dashboard"}>Dashboard</Link></Button>
                     )}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -87,8 +89,8 @@ useEffect(()=>{
             </div>
           ) : (
             <div className="flex gap-4">
-              <Button variant="outline">Login</Button>
-              <Button>Signup</Button>
+              <Button variant="outline" ><Link to={"/login"}>Login</Link></Button>
+              <Button><Link to={"/login"}>Signup</Link></Button>
             </div>
           )}
           <div>
@@ -96,7 +98,7 @@ useEffect(()=>{
           </div>
         </div>
         <div className=" flex justify-between w-full md:hidden">
-          <MobileNavbar user={user} role={role}  logout = {handleLogout}/>
+          <MobileNavbar user={user} role={user?.role}  logout = {handleLogout}/>
         </div>
       </div>
     </>
@@ -139,17 +141,15 @@ const MobileNavbar = ({ user, role, logout }) => {
                   <p className="text-md cursor-pointer" onClick={logout}>Logout</p>
                   <hr />
                   {role === "instructor" && (
-                    <Button className="w-full">Dashboard</Button>
+                    <Button className="w-full"><Link to={"/admin/dashboard"}>Dashboard</Link></Button>
                   )}
                 </div>
               </>
             ) : (
               <>
                 <div className="p-4 mt-7 flex  gap-4">
-                  <Button variant="outline" className="w-full">
-                    Login
-                  </Button>
-                  <Button className="w-full">Signup</Button>
+                <Button variant="outline" className="w-full" ><Link to={"/login"}>Login</Link></Button>
+                <Button className="w-full"><Link to={"/login"}>Signup</Link></Button>
                 </div>
               </>
             )}
