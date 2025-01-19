@@ -18,6 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
+  useGetCouseByIdQuery,
   useUpdateCreaterCourseMutation,
 } from "@/features/api/courseApi";
 import { Label } from "@radix-ui/react-dropdown-menu";
@@ -27,15 +28,15 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 
 const UpdateCoursePage = () => {
+
   let course = true;
   const navigate = useNavigate();
-  // let isLoading = false;
   const params = useParams();
   const courseId = params.courseId;
-  // console.log(courseId);
   const [updateCreaterCourse, { data, isError, isLoading, isSuccess, error }] =
     useUpdateCreaterCourseMutation();
-    console.log(data)
+  const {data:GetCourseData, isLoading:GetCourseDataisLoading, refetch} = useGetCouseByIdQuery(courseId)
+  console.log(GetCourseData)
   const [inputData, setInputData] = useState({
     title: "",
     subTitle: "",
@@ -45,6 +46,22 @@ const UpdateCoursePage = () => {
     price: "",
     courseThumbnail: "",
   });
+
+  useEffect(() => {
+    if(GetCourseData?.course){
+      const course = GetCourseData?.course
+      setInputData({
+        title: course.title,
+        subTitle: course.subTitle,
+        description: course.description,
+        category: course.category,
+        level: course.level,
+        price: course.price,
+        courseThumbnail: course.courseThumbnail 
+
+      })
+    }
+  }, [GetCourseData]);
 
   const [previewImage, setPreviewImage] = useState("");
   const handleChange = (e) => {
@@ -99,6 +116,7 @@ const UpdateCoursePage = () => {
 
   useEffect(() => {
     if (isSuccess) {
+      refetch()
       toast.success(data.message || "Course updated successful");
       navigate("/admin/courses")
     }
