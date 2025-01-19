@@ -3,7 +3,7 @@ import { createLectureController } from "../controllers/lecture.controller.js"
 
 const router  = express.Router()
 
-router.route("/create/:courseId").post(createLectureController)
+router.route("/:courseId/create").post(createLectureController)
 
 
 export default router

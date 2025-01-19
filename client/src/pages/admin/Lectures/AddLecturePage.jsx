@@ -1,18 +1,37 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import React, { useState } from 'react'
+import { useCreateLectureMutation } from '@/features/api/lectureApi'
+import { Loader2 } from 'lucide-react'
+import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import { toast } from 'sonner'
 
 const AddLecturePage = () => {
     const params = useParams()
     const courseId = params.courseId
-    const [lectureTitle, setLectureTitle] = useState('')
-    const isLoading = false
+    // console.log(courseId)
+    const [title, setTitle] = useState('')
+// console.log(lectureTitle)
+    const [createLecture, { data, isSuccess, isLoading, error, isError}] = useCreateLectureMutation()
 
-    const handleCreateLecture = () => {
-        console.log(lectureTitle)
+    const handleCreateLecture = async() => {
+      await createLecture({title, courseId})
+        console.log(title)
     }
+
+    useEffect(()=>{
+
+      if(isSuccess){
+        toast.success(data.message || "Lecture created successfully")
+        setTitle('')
+      }
+      if(isError){
+        toast.error(error?.data.message || "Something went wrong  lecture not created")
+      }
+    },[data, isSuccess, error, isError, isLoading])
+
+
   return (
     <>
      <div className="md:p-16 p-2 w-full overflow-hidden">
@@ -30,8 +49,8 @@ const AddLecturePage = () => {
            placeholder="Enter Lecture title" 
            className="p-2 mt-3"
            name="lectureTitle"
-           value={lectureTitle}
-           onChange={(e) => setLectureTitle(e.target.value)}
+           value={title}
+           onChange={(e) => setTitle(e.target.value)}
            
            />
         </div>

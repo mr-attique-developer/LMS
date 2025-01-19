@@ -9,10 +9,10 @@ export const lectureApi = createApi({
     }),
     endpoints: (builder) => ({
         createLecture: builder.mutation({
-            query: (lectureTitle, courseId) => ({
-                url: `/create/${courseId}`,
+            query: ({title, courseId}) => ({
+                url: `/${courseId}/create`,
                 method: "POST",
-                body: lectureTitle,
+                body: {title},
             }),
         }),
     }),
