@@ -11,6 +11,7 @@ import CreateCourse from './pages/admin/Courses/CreateCourse';
 import Dashboard from './pages/admin/Dashboard/Dashboard';
 import AdminCoursePage from './pages/admin/Courses/AdminCoursePage';
 import UpdateCoursePage from './pages/admin/Courses/UpdateCoursePage';
+import AddLecturePage from './pages/admin/Lectures/AddLecturePage';
 
 const AppLayout = () => (
   <>
@@ -69,6 +70,10 @@ const router = createBrowserRouter([
           {
             path:"courses/:courseId",
             element:<UpdateCoursePage/>
+          },
+          {
+            path:"courses/:courseId/lecture",
+            element:<AddLecturePage/>
           },
         ]
 
