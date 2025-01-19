@@ -217,7 +217,7 @@ const UpdateCoursePage = () => {
                 <Label>Price</Label>
                 <Input
                   className="p-2"
-                  placeholder="Enter course price"
+                  placeholder="99"
                   type="number"
                   name="price"
                   value={inputData.price}
@@ -238,7 +238,7 @@ const UpdateCoursePage = () => {
                   <img
                     src={previewImage}
                     alt="course thumbnail"
-                    className="w-20 h-20 object-cover mt-2"
+                    className="w-96 h-96 object-cover mt-2"
                   />
                 )}
               </div>
