@@ -5,6 +5,7 @@ import "dotenv/config"
 import { connectDB } from "./db/connectDB.js"
 import userRoutes from "./routes/user.routes.js"
 import courseRoutes from "./routes/course.routes.js"
+import lectureRoutes from "./routes/lecture.routes.js"
 
 const app = express()
 
@@ -19,6 +20,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use("/api/v1/auth", userRoutes)
 app.use("/api/v1/course", courseRoutes)
+app.use("/api/v1/lecture", lectureRoutes)
 
 
 app.get("/", (req, res) => {
