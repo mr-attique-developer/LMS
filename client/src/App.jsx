@@ -12,6 +12,7 @@ import Dashboard from './pages/admin/Dashboard/Dashboard';
 import AdminCoursePage from './pages/admin/Courses/AdminCoursePage';
 import UpdateCoursePage from './pages/admin/Courses/UpdateCoursePage';
 import AddLecturePage from './pages/admin/Lectures/AddLecturePage';
+import UpdateLecturePage from './pages/admin/Lectures/UpdateLecturePage';
 
 const AppLayout = () => (
   <>
@@ -74,6 +75,10 @@ const router = createBrowserRouter([
           {
             path:"courses/:courseId/lecture",
             element:<AddLecturePage/>
+          },
+          {
+            path:"courses/:courseId/lecture/:lectureId",
+            element:<UpdateLecturePage/>
           },
         ]
 

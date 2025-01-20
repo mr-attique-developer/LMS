@@ -73,7 +73,7 @@ console.log(getLectureData)
         </div>
 
         
-    <div className='w-full  md:mt-8 mt-4 md:p-4'>
+    <div className='w-full  md:mt-8 mt-4'>
       {
         getLectureLoading && <div>Loading...</div>
       }

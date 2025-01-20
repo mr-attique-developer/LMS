@@ -57,7 +57,7 @@ const Sidebar = () => {
             </Link>
           </div>
         </div>
-        <main className="md:ml-[250px] ml-6 p-4 w-full">
+        <main className="md:ml-[300px] ml-6 p-4 w-full">
       <Outlet />
     </main>
        
