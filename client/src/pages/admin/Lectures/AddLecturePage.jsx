@@ -1,18 +1,21 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { useCreateLectureMutation } from '@/features/api/lectureApi'
-import { Loader2 } from 'lucide-react'
+import { useCreateLectureMutation, useGetLectureQuery } from '@/features/api/lectureApi'
+import { Edit, Loader2 } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
 
 const AddLecturePage = () => {
     const params = useParams()
     const courseId = params.courseId
+    const navigate = useNavigate()
     // console.log(courseId)
     const [title, setTitle] = useState('')
 // console.log(lectureTitle)
+const {data:getLectureData, isError:getLectureError , isLoading:getLectureLoading, refetch} = useGetLectureQuery(courseId)
+console.log(getLectureData)
     const [createLecture, { data, isSuccess, isLoading, error, isError}] = useCreateLectureMutation()
 
     const handleCreateLecture = async() => {
@@ -23,6 +26,7 @@ const AddLecturePage = () => {
     useEffect(()=>{
 
       if(isSuccess){
+        refetch()
         toast.success(data.message || "Lecture created successfully")
         setTitle('')
       }
@@ -34,7 +38,7 @@ const AddLecturePage = () => {
 
   return (
     <>
-     <div className="md:p-16 p-2 w-full overflow-hidden">
+     <div className="md:p-16 p-2 w-full ">
         <h1 className="text-2xl font-bold">
           Lets add course, add some basic details for your new course
         </h1>
@@ -67,8 +71,30 @@ const AddLecturePage = () => {
             }
           </Button>
         </div>
+
+        
+    <div className='w-full  md:mt-8 mt-4 md:p-4'>
+      {
+        getLectureLoading && <div>Loading...</div>
+      }
+      {
+        getLectureError && <div>Something went wrong</div>
+      }
+      {
+        getLectureData && getLectureData.lectures.length === 0 && <div>No Lecture found</div>
+      }
+      {
+        getLectureData && getLectureData.lectures.map((lecture, index) => (
+          <div key={lecture._id} className='flex justify-between items-center p-4 border border-gray-200 mt-2'>
+            <p>Lecture {index+1} <span className='font-bold'> {lecture.title}</span></p>
+            <Edit onClick={()=> navigate(lecture._id)}/>
+          </div>
+        ))
+      }
+    </div>
       </div>
     
+
     </>
   )
 }

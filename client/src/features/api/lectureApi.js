@@ -10,14 +10,20 @@ export const lectureApi = createApi({
     endpoints: (builder) => ({
         createLecture: builder.mutation({
             query: ({title, courseId}) => ({
-                url: `/${courseId}/create`,
+                url: `/create/${courseId}`,
                 method: "POST",
                 body: {title},
+            }),
+        }),
+        getLecture: builder.query({
+            query: (courseId) => ({
+                url: `/get/${courseId}`,
+                method: "GET"
             }),
         }),
     }),
 })
 
 
-export const {useCreateLectureMutation} = lectureApi
+export const {useCreateLectureMutation, useGetLectureQuery} = lectureApi
 export default lectureApi.reducer
