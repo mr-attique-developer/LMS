@@ -1,9 +1,10 @@
 import express from "express"
-import { createLectureController } from "../controllers/lecture.controller.js"
+import { createLectureController, getListOfLecturesController } from "../controllers/lecture.controller.js"
 
 const router  = express.Router()
 
-router.route("/:courseId/create").post(createLectureController)
+router.route("/create/:courseId").post(createLectureController)
+router.route("/get/:courseId").get(getListOfLecturesController)
 
 
 export default router

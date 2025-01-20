@@ -1,12 +1,10 @@
 import Course from "../models/course.model.js";
 import Lecture from "../models/lecture.model.js";
-// import { uploadMediaToCloudinary } from "../utils/cloudinary.js";
 
 export const createLectureController = async (req, res) => {
   try {
     const courseId = req.params.courseId;
     const { title} = req.body;
-    // const video = req.file;
 
     if (!courseId || !title) {
       return res.status(400).json({
@@ -23,19 +21,9 @@ export const createLectureController = async (req, res) => {
       });
     }
 
-    // let videoUrl;
-    // if (video) {
-    //   const result = await uploadMediaToCloudinary(video.path);
-    //   videoUrl = result.secure_url;
-    // }
-
+    
     const lecture = new Lecture({
       title,
-    //   description,
-    //   videoUrl,
-    //   course: courseId,
-    //   instructor: req.id,
-    //   duration,
     });
 
     await lecture.save();
@@ -56,3 +44,29 @@ export const createLectureController = async (req, res) => {
     });
   }
 };
+
+
+export const getListOfLecturesController = async (req, res) => {
+  try {
+    const courseId = req.params.courseId;
+    const course = await Course.findById(courseId).populate("lectures");
+    if (!course) {
+      return res.status(404).json({
+        success: false,
+        message: "Course not found",
+      });
+    }
+    res.status(200).json({
+      success: true,
+      message: "List of lectures fetched successfully",
+      lectures: course.lectures,
+    });
+  } catch (error) {
+    console.log("Error in get list of lectures controller", error);
+    res.status(500).json({
+      success: false,
+      message: "Error in get list of lectures controller",
+    });
+    
+  }
+}

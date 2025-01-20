@@ -16,7 +16,8 @@ export const createCourseController = async (req, res) => {
     const creater = req.id;
     const course = new Course({
       title,
-    category
+    category, 
+    creater
     });
 
     await course.save();
@@ -38,7 +39,7 @@ export const createCourseController = async (req, res) => {
 export const getCreaterCoursesController = async (req, res) => {
   try {
     const userId = req.id;
-    console.log(userId);
+    // console.log(userId);
     const courses = await Course.find({ creater: userId });
     if (!courses) {
       return res.status(404).json({

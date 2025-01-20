@@ -81,7 +81,7 @@ useEffect(()=>{
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>
                     {user?.role === "instructor" && (
-                      <Button className="w-full" > <Link to={"/admin/dashboard"}>Dashboard</Link></Button>
+                   <Link to={"/admin/dashboard"} className="w-full">   <Button  className="w-full"> Dashboard</Button></Link>
                     )}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -89,8 +89,8 @@ useEffect(()=>{
             </div>
           ) : (
             <div className="flex gap-4">
-              <Button variant="outline" ><Link to={"/login"}>Login</Link></Button>
-              <Button><Link to={"/login"}>Signup</Link></Button>
+            <Link to={"/login"}> <Button variant="outline" >Login</Button></Link>
+            <Link to={"/login"}>  <Button>Signup</Button></Link>
             </div>
           )}
           <div>
@@ -141,15 +141,15 @@ const MobileNavbar = ({ user, role, logout }) => {
                   <p className="text-md cursor-pointer" onClick={logout}>Logout</p>
                   <hr />
                   {role === "instructor" && (
-                    <Button className="w-full"><Link to={"/admin/dashboard"}>Dashboard</Link></Button>
+                   <Link to={"/admin/dashboard"}> <Button className="w-full">Dashboard</Button></Link>
                   )}
                 </div>
               </>
             ) : (
               <>
                 <div className="p-4 mt-7 flex  gap-4">
-                <Button variant="outline" className="w-full" ><Link to={"/login"}>Login</Link></Button>
-                <Button className="w-full"><Link to={"/login"}>Signup</Link></Button>
+                <Link to={"/login"}><Button variant="outline" className="w-full" >Login</Button></Link>
+                <Link to={"/login"}><Button className="w-full">Signup</Button></Link>
                 </div>
               </>
             )}
