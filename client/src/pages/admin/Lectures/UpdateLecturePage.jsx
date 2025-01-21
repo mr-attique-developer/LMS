@@ -10,11 +10,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Switch } from "@/components/ui/switch";
-import { useGetLectureQuery } from "@/features/api/lectureApi";
+import { useGetLectureQuery, useUpdateLectureMutation } from "@/features/api/lectureApi";
 import axios from "axios";
 import { ArrowLeft } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, UNSAFE_ErrorResponseImpl, useParams } from "react-router-dom";
 import { toast } from "sonner";
 
 const UpdateLecturePage = () => {
@@ -27,6 +27,7 @@ const UpdateLecturePage = () => {
   const [disableButton, setDisableButton] = useState(true);
 
   const { data, isLoading } = useGetLectureQuery(courseId);
+  const  [updateLecture, {data:updateLectureData, isLoading: updateLectureIsLoading, isError , isSuccess, error} ] = useUpdateLectureMutation()
 
   useEffect(() => {
     data?.lectures?.map((lecture) => setTitle(lecture.title));
@@ -67,6 +68,23 @@ const UpdateLecturePage = () => {
     }
   };
 
+  const handleUpdateLecture = async()=>{
+    await updateLecture({courseId, videoInfo:uploadVideoInfo, isPreviewFree, title, lectureId})
+  }
+
+  useEffect(()=>{
+if(isSuccess){
+  toast.success(updateLectureData.message)
+}
+if(isError){
+  toast.success(error.data.message)
+}
+  },[updateLectureIsLoading, isError, isSuccess])
+
+  const handlePreview = ()=>{
+    setIsPreviewFree(!isPreviewFree)
+  }
+  console.log(isPreviewFree)
   return (
     <>
       <div className="md:p-16 p-2 w-full">
@@ -112,7 +130,7 @@ const UpdateLecturePage = () => {
             </div>
 
             <div className="flex items-center space-x-2 my-4">
-              <Switch id="airplane-mode" />
+              <Switch id="airplane-mode" onClick={handlePreview}/>
               <Label htmlFor="airplane-mode" className="capitalize">
                 Is this free video
               </Label>
@@ -124,7 +142,7 @@ const UpdateLecturePage = () => {
                 <p>{uploadProgress}% uploaded</p>
               </div>
             )}
-            <Button disabled={disableButton} onClick={"handleUpdate"}>
+            <Button disabled={disableButton} onClick={handleUpdateLecture}>
               Update Lecture
             </Button>
           </CardContent>

@@ -21,9 +21,16 @@ export const lectureApi = createApi({
                 method: "GET"
             }),
         }),
+        updateLecture: builder.mutation({
+            query: ({courseId,lectureId, videoInfo, isPreviewFree, title}) => ({
+                url: `/update/${courseId}/lecture/${lectureId}`,
+                method: "POST",
+                body: { videoInfo, isPreviewFree, title}
+            }),
+        }),
     }),
 })
 
 
-export const {useCreateLectureMutation, useGetLectureQuery} = lectureApi
+export const {useCreateLectureMutation, useGetLectureQuery, useUpdateLectureMutation} = lectureApi
 export default lectureApi.reducer
