@@ -87,7 +87,7 @@ console.log(getLectureData)
         getLectureData && getLectureData.lectures.map((lecture, index) => (
           <div key={lecture._id} className='flex justify-between items-center p-4 border border-gray-200 mt-2'>
             <p>Lecture {index+1} <span className='font-bold'> {lecture.title}</span></p>
-            <Edit onClick={()=> navigate(lecture._id)}/>
+            <Edit onClick={()=> navigate(lecture._id)} className='cursor-pointer'/>
           </div>
         ))
       }

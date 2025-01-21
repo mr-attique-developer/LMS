@@ -79,14 +79,14 @@ export const updateLecutreController= async(req,res)=>{
     const lecture = await Lecture.findByIdAndUpdate(lectureId)
 
     if(title) lecture.title = title
-    if(isPreviewFree) lecture.isPreviewFree = isPreviewFree
-    if(videoInfo.videoUrl) lecture.videoUrl = videoInfo.videoUrl
-    if(videoInfo.publicId) lecture.publicId = videoInfo.publicId
+    lecture.isPreviewFree = isPreviewFree
+    if(videoInfo?.videoUrl) lecture.videoUrl = videoInfo.videoUrl
+    if(videoInfo?.publicId) lecture.publicId = videoInfo.publicId
     await lecture.save()
 
     const course = await Course.findById(courseId)
 
-    if(course && course.lectures.includes(lecture._id)){
+    if(course && !course.lectures.includes(lecture._id)){
       course.lectures.push(lecture._id)
       await course.save()
     }

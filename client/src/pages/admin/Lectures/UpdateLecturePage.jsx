@@ -10,14 +10,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Switch } from "@/components/ui/switch";
-import { useGetLectureQuery, useUpdateLectureMutation } from "@/features/api/lectureApi";
+import { useDeleteLectureMutation, useGetLectureByIdQuery, useGetLectureQuery, useUpdateLectureMutation } from "@/features/api/lectureApi";
 import axios from "axios";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { Link, UNSAFE_ErrorResponseImpl, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 
 const UpdateLecturePage = () => {
+  const navigate = useNavigate()
   const { courseId, lectureId } = useParams();
   const [title, setTitle] = useState("");
   const [uploadVideoInfo, setUploadVideoInfo] = useState(null);
@@ -26,12 +27,20 @@ const UpdateLecturePage = () => {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [disableButton, setDisableButton] = useState(true);
 
-  const { data, isLoading } = useGetLectureQuery(courseId);
+  // const { data, isLoading } = useGetLectureQuery(courseId);
   const  [updateLecture, {data:updateLectureData, isLoading: updateLectureIsLoading, isError , isSuccess, error} ] = useUpdateLectureMutation()
+  const [deleteLecture, {data:removeData, isLoading: removeIsLoading, isSuccess:removeIsSuccess, isError:removeIsError, error:removeError}] = useDeleteLectureMutation()
+  const {data} = useGetLectureByIdQuery(lectureId)
 
-  useEffect(() => {
-    data?.lectures?.map((lecture) => setTitle(lecture.title));
-  }, [data, isLoading]);
+const getLectureByIdData = data?.lecture
+useEffect(()=>{
+if(getLectureByIdData){
+  setTitle(getLectureByIdData?.title)
+  setIsPreviewFree(getLectureByIdData?.isPreviewFree)
+  setUploadVideoInfo(getLectureByIdData?.videoUrl)
+}
+},[getLectureByIdData])
+
 
   const handleVideoUpload = async (e) => {
     const file = e.target.files[0];
@@ -72,19 +81,30 @@ const UpdateLecturePage = () => {
     await updateLecture({courseId, videoInfo:uploadVideoInfo, isPreviewFree, title, lectureId})
   }
 
+  const handleDeleteLecture = async()=>{
+    await deleteLecture(lectureId)
+  }
+
   useEffect(()=>{
 if(isSuccess){
   toast.success(updateLectureData.message)
 }
 if(isError){
-  toast.success(error.data.message)
+  toast.success(error?.data?.message)
 }
   },[updateLectureIsLoading, isError, isSuccess])
 
-  const handlePreview = ()=>{
-    setIsPreviewFree(!isPreviewFree)
-  }
-  console.log(isPreviewFree)
+  useEffect(()=>{
+if(removeIsSuccess){
+  navigate(`/admin/courses/${courseId}/lecture`)
+  toast.success(removeData?.message)
+}
+if(removeIsError){
+  toast.error(removeError?.data?.message)
+}
+  },[removeIsLoading,removeIsError, removeIsError])
+
+console.log(isPreviewFree)
   return (
     <>
       <div className="md:p-16 p-2 w-full">
@@ -105,7 +125,13 @@ if(isError){
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Button variant="destructive"> Remove Lecture</Button>
+            <Button disabled={removeIsLoading} variant="destructive" onClick={handleDeleteLecture}>{
+              removeIsLoading? <>
+              <Loader2 className="animate-spin" /> Wait Please
+              </>: 
+              "Remove Lecture"
+
+              }</Button>
             <div className="mt-8">
               <Label className="text-md font-semibold">Lecure Title</Label>
               <Input
@@ -130,7 +156,7 @@ if(isError){
             </div>
 
             <div className="flex items-center space-x-2 my-4">
-              <Switch id="airplane-mode" onClick={handlePreview}/>
+              <Switch id="airplane-mode" checked={isPreviewFree} onCheckedChange={setIsPreviewFree}/>
               <Label htmlFor="airplane-mode" className="capitalize">
                 Is this free video
               </Label>
@@ -143,7 +169,11 @@ if(isError){
               </div>
             )}
             <Button disabled={disableButton} onClick={handleUpdateLecture}>
-              Update Lecture
+              {
+                updateLectureIsLoading? <>
+                <Loader2 className="animate-spin"/> Wait Please
+                </>:"Update Lecture"
+              }
             </Button>
           </CardContent>
         </Card>
