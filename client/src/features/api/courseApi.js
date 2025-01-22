@@ -39,6 +39,12 @@ export const courseApi = createApi({
         method: "PUT",
       }),
     }),
+    getPublishedCourse: builder.query({
+      query: () => ({
+        url: `/getPublishedCourse`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -47,6 +53,7 @@ export const {
   useGetCreaterCoursesQuery,
   useUpdateCreaterCourseMutation,
   useGetCouseByIdQuery,
-  usePublishCourseMutation
+  usePublishCourseMutation,
+  useGetPublishedCourseQuery
   
 } = courseApi;

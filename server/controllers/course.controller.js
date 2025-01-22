@@ -171,3 +171,33 @@ export const togglePublishedCourseController = async(req, res) => {
     })
   }
 }
+
+
+
+export const getPublishedCoursesOnly = async (req,res)=>{
+
+  try {
+
+    const course = await Course.find({isPublished:true}).populate({path: "creater" , select: "name photoUrl"} )
+    if(!course){
+      return res.status(404).json({
+        success: false,
+        message: "Course not found"
+      })
+
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Published Course fetched successfully",
+      course
+    })
+    
+  }catch (error) {
+    console.log("Error in toggle Publised controller",error)
+    res.status(500).json({
+      success: false,
+      message: "Error in get  Publised courses controller"
+    })
+  }
+}
