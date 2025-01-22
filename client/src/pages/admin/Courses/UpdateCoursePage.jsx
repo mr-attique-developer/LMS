@@ -29,7 +29,7 @@ import { toast } from "sonner";
 
 const UpdateCoursePage = () => {
 
-  let course = true;
+  let course = false;
   const navigate = useNavigate();
   const params = useParams();
   const courseId = params.courseId;
@@ -132,7 +132,7 @@ const UpdateCoursePage = () => {
           Add detail information regarding course
         </h1>
         <div>
-          <h1 className="hover:text-blue-500 hover:underline text-sm md:text-xl">
+          <h1 className="hover:text-blue-500 hover:underline text-sm md:text-base">
             <Link to={"lecture"}> Go to Lecture Page</Link>
           </h1>
         </div>
