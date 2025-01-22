@@ -3,13 +3,13 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import React from "react";
 
-const SingleCourseComponent = () => {
+const SingleCourseComponent = ({course}) => {
   return (
     <div>
       <Card className="overflow-hidden rounded-lg dark:bg-gray-800 bg-white shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300">
         <div className="relative">
           <img
-            src={"https://img-c.udemycdn.com/course/750x422/3873464_403c_3.jpg"}
+            src={course?.courseThumbnail}
             alt="course"
             className="w-full h-36 object-cover rounded-t-lg"
           />
@@ -17,21 +17,21 @@ const SingleCourseComponent = () => {
         <CardContent>
           <div className="space-y-3">
             <h1 className="text-xl hover:underline cursor-pointer mt-5 font-bold text-gray-800 dark:text-gray-100 truncate">
-              The Complete Next.js Course 2024: From Zero to Expert!
+              {course?.title}
             </h1>
             <div className="flex items-center  justify-between mt-3">
-              <div className="flex items-center gap-6">
+              <div className="flex items-center gap-6 mr-3">
                 <Avatar>
-                  <AvatarImage src="https://github.com/shadcn.png" />
+                  <AvatarImage src= {course?.photoUrl ||"https://github.com/shadcn.png"} />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
-                <h1 className="font-medium text-sm">Attique</h1>
+                <h1 className="font-medium text-sm">{course?.creater?.username}</h1>
               </div>
-              <Badge className="py-1 px-2  rounded-full text-sm">Advance</Badge>
+              <Badge className="py-1 px-2  rounded-full text-sm">{course?.level}</Badge>
             </div>
 
             <div className="text-lg font-bold">
-              <span>$ 45</span>
+              <span>$ {course?.price}</span>
             </div>
           </div>
         </CardContent>

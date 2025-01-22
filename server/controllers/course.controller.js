@@ -178,7 +178,7 @@ export const getPublishedCoursesOnly = async (req,res)=>{
 
   try {
 
-    const course = await Course.find({isPublished:true}).populate({path: "creater" , select: "name photoUrl"} )
+    const course = await Course.find({isPublished:true}).populate({path: "creater" , select: "username photoUrl"} )
     if(!course){
       return res.status(404).json({
         success: false,
