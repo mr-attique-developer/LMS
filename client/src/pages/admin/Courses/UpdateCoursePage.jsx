@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/select";
 import {
   useGetCouseByIdQuery,
+  usePublishCourseMutation,
   useUpdateCreaterCourseMutation,
 } from "@/features/api/courseApi";
 import { Label } from "@radix-ui/react-dropdown-menu";
@@ -29,13 +30,13 @@ import { toast } from "sonner";
 
 const UpdateCoursePage = () => {
 
-  let course = false;
   const navigate = useNavigate();
   const params = useParams();
   const courseId = params.courseId;
   const [updateCreaterCourse, { data, isError, isLoading, isSuccess, error }] =
     useUpdateCreaterCourseMutation();
   const {data:GetCourseData, isLoading:GetCourseDataisLoading, refetch} = useGetCouseByIdQuery(courseId)
+  const [publishCourse, {data:publishCourseData, isError:publishCourseIsError, isLoading: publishCourseIsLoading, error:publishCourseError}] = usePublishCourseMutation()
   console.log(GetCourseData)
   const [inputData, setInputData] = useState({
     title: "",
@@ -125,6 +126,20 @@ const UpdateCoursePage = () => {
     }
   }, [isSuccess, isError, data, error, isLoading]);
 
+  const handlePublishCourse = async(action)=>{
+    try {
+      
+   const response =  await publishCourse({courseId, query: action})
+   refetch()
+   toast.success(response.data.message)
+
+    console.log(response)
+    } catch (error) {
+      toast.error(error.data.message)
+      console.log(error)
+    }
+  }
+
   return (
     <div className="md:p-16 p-2 mt-4 w-full">
       <div className="flex justify-between items-center ">
@@ -151,8 +166,8 @@ const UpdateCoursePage = () => {
                 </CardDescription>
               </div>
               <div className="sm:flex-row flex-col flex gap-3 ">
-                <Button variant="outline">
-                  {course ? "Unpublish " : "Publish"}
+                <Button variant="outline" onClick={()=> handlePublishCourse(GetCourseData?.course?.isPublished ? "false" : "true")}>
+                  {GetCourseData?.course?.isPublished ? "Unpublish " : "Publish"}
                 </Button>
                 <Button>Remove Course</Button>
               </div>

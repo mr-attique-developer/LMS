@@ -157,9 +157,10 @@ export const togglePublishedCourseController = async(req, res) => {
     }
     course.isPublished = publish === "true"
     await course.save()
+    const status = publish === "true" ? "published" : "unpublished"
     return res.status(200).json({
       success: true,
-      message: "Course published status updated successfully",
+      message: `Course ${status} successfully`,
       course
     })
   } catch (error) {
