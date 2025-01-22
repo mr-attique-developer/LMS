@@ -47,11 +47,11 @@ useEffect(()=>{
             </TableHeader>
             <TableBody>
               {data?.courses
-                .map((course, i) => (
+                .map((course) => (
                   <TableRow key={course._id}>
                     <TableCell colSpan={3}>{course.title}</TableCell>
                     <TableCell>{course.price || "NA"}</TableCell>
-                    <TableCell><Badge className={"py-2 px-4"}>{ course.isPublished||"Pending"}</Badge></TableCell>
+                    <TableCell><Badge className={"py-2 px-4"}>{course.isPublished ? "Published" : "Draft"}</Badge></TableCell>
                     <TableCell className="text-right ">
                       <Button onClick={()=> navigate(course._id)}><Edit/></Button>
                     </TableCell>
