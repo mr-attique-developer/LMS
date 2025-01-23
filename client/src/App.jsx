@@ -13,6 +13,7 @@ import AdminCoursePage from './pages/admin/Courses/AdminCoursePage';
 import UpdateCoursePage from './pages/admin/Courses/UpdateCoursePage';
 import AddLecturePage from './pages/admin/Lectures/AddLecturePage';
 import UpdateLecturePage from './pages/admin/Lectures/UpdateLecturePage';
+import CourseDetails from './pages/student/CourseDetails';
 
 const AppLayout = () => (
   <>
@@ -48,6 +49,10 @@ const router = createBrowserRouter([
       {
         path: "/login",
         element: <Login />,
+      },
+      {
+        path: "/course-detail/:courseId",
+        element: <CourseDetails />,
       },
 
       // Admin routing
