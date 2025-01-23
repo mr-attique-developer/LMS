@@ -4,7 +4,6 @@ import CoursePurchase from "../models/coursePurchase.model.js";
 import Lecture from "../models/lecture.model.js";
 import User from "../models/user.model.js";
 
-
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export const createCheckoutSession = async (req, res) => {
@@ -15,11 +14,19 @@ export const createCheckoutSession = async (req, res) => {
     const course = await Course.findById(courseId);
     if (!course) return res.status(404).json({ message: "Course not found!" });
 
+    // Convert the course price to USD (assuming 1 USD = 75 INR for example)
+    const priceInUSD = course.price / 75;
+    const amountInCents = Math.round(priceInUSD * 100); // Convert to cents
+
+    if (amountInCents < 50) {
+      return res.status(400).json({ message: "The course price must be at least 50 cents." });
+    }
+
     // Create a new course purchase record
     const newPurchase = new CoursePurchase({
       courseId,
       userId,
-      amount: course.coursePrice,
+      amount: course.price,
       status: "pending",
     });
 
@@ -29,12 +36,12 @@ export const createCheckoutSession = async (req, res) => {
       line_items: [
         {
           price_data: {
-            currency: "inr",
+            currency: "usd",
             product_data: {
               name: course.title,
               images: [course.courseThumbnail],
             },
-            unit_amount: course.price * 100, // Amount in paise (lowest denomination)
+            unit_amount: amountInCents, // Amount in cents (lowest denomination)
           },
           quantity: 1,
         },
@@ -45,9 +52,6 @@ export const createCheckoutSession = async (req, res) => {
       metadata: {
         courseId: courseId,
         userId: userId,
-      },
-      shipping_address_collection: {
-        allowed_countries: ["IN"], // Optionally restrict allowed countries
       },
     });
 
@@ -67,6 +71,10 @@ export const createCheckoutSession = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Error in create checkout session",
+    });
   }
 };
 
