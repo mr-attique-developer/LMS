@@ -7,7 +7,7 @@ import userRoutes from "./routes/user.routes.js"
 import courseRoutes from "./routes/course.routes.js"
 import lectureRoutes from "./routes/lecture.routes.js"
 import mediaUpload from "./routes/mediaUpload.routes.js"
-
+import CoursePurchase from "./routes/coursePurchase.routes.js"
 const app = express()
 
 
@@ -23,6 +23,7 @@ app.use("/api/v1/auth", userRoutes)
 app.use("/api/v1/course", courseRoutes)
 app.use("/api/v1/lecture", lectureRoutes)
 app.use("/api/v1/media", mediaUpload)
+app.use("/api/v1/purchase", CoursePurchase)
 
 
 app.get("/", (req, res) => {
