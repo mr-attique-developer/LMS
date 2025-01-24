@@ -12,7 +12,7 @@ export const coursePurchaseApi = createApi({
             query: (courseId) => ({
                 url: "/checkout/create-checkout-session",
                 method: "POST",
-                body:{courseId}
+                body:courseId
             }),
         }),
         stripeWebhook: builder.mutation({

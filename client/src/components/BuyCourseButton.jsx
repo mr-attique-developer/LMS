@@ -11,21 +11,22 @@ const BuyCourseButton = ({ courseId }) => {
   ] = useCreateCheckoutSessionMutation();
 
   const handleCheckout = async () => {
-    await createCheckoutSession(courseId);
+    await createCheckoutSession({ courseId });
   };
 
-  useEffect(()=>{
-if(isSuccess){
-  if(data?.url){
-    window.location.href(data.url)
-  }else{
-    toast.error("Something went wrong")
-  }
-}
-  if(isError){
-    toast.error(error.data.message)
-  }
-  },[ isLoading, isError, isSuccess, error])
+  useEffect(() => {
+    if (isSuccess) {
+      if (data?.url) {
+        window.location.href = data.url; // Correctly assign the URL
+      } else {
+        toast.error("Something went wrong");
+      }
+    }
+    if (isError) {
+      toast.error(error?.data?.message || "Something went wrong");
+    }
+  }, [isSuccess, isError, data, error]);
+
   return (
     <Button disabled={isLoading} onClick={handleCheckout} className="w-full p-2 rounded-lg">
       {isLoading ? (
