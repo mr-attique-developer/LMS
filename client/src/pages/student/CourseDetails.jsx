@@ -9,36 +9,44 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { usePurchasedCoursesDetailsWithStatusQuery } from "@/features/api/coursePurchaseApi";
 import { BadgeInfo, Info, Lock, PlayCircle } from "lucide-react";
 import React from "react";
+import ReactPlayer from "react-player";
 import { useParams } from "react-router-dom";
 
 const CourseDetails = () => {
   const params = useParams()
   const courseId = params.courseId
-  const purchase = false;
+  const {data, isLoading, error } = usePurchasedCoursesDetailsWithStatusQuery(courseId)
+  console.log(data)
+  if(isLoading) return <div>Loading...</div>
+  if(error) return <div>Error: {error.data.message}</div>
+
+  const {course, purchase} = data
+  console.log(course?.lectures[0].videoUrl)
   return (
     <div className="w-full overflow-x-hidden">
       <div className="min-h-60 bg-blue-700">
         <div className="container mx-auto p-8 text-left">
           <h1 className="capitalize text-xl md:text-5xl font-bold my-3">
-            Master Next.js Full Course
+           {course?.title}
           </h1>
           <p className="capitalize text-sm md:text-base">
-            Build scalable, modern web apps with React & Next.js
+            {course?.subTitle}
           </p>
           <p className="capitalize text-sm md:text-base ">
             Created by{" "}
             <span className="underline text-slate-700 my-3 cursor-pointer">
-              Mr Ateeq
+              {course?.creater?.username}
             </span>
           </p>
 
           <div className="flex items-center gap-1 text-sm md:text-base ">
             <BadgeInfo className="" />
-            <p>Last update 2024-5-09</p>
+            <p>Last update <span>{course?.createdAt.split("T")[0]}</span></p>
           </div>
-          <p className="text-xs md:text-base">Student Enrolled: 1</p>
+          <p className="text-xs md:text-base">Student Enrolled: <span>{course.enrolledStudents.length}</span></p>
         </div>
       </div>
 
@@ -46,24 +54,19 @@ const CourseDetails = () => {
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between w-full">
           <div className="w-full md:w-3/5">
             <h1 className="text-3xl font-bold my-3">Description</h1>
-            <p className="text-wrap">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt
-              sint beatae corporis necessitatibus eum quos tempora temporibus.
-              Quos voluptatem quisquam repudiandae quasi nobis.
-            </p>
+            <p className="text-wrap" dangerouslySetInnerHTML={{__html: course?.description}}/>
             <div className="my-5">
               <Card>
                 <CardHeader>
                   <CardTitle>Course Content</CardTitle>
-                  <CardDescription>4 Lectures</CardDescription>
+                  <CardDescription>{course?.lectures?.length}</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  {Array(3)
-                    .fill()
-                    .map((c, i) => (
+                  {course?.lectures
+                    .map((lecture, i) => (
                       <div className="flex items-center gap-3" key={i}>
                         <span>{true ? <PlayCircle /> : <Lock />}</span>
-                        <p>Lecture Title</p>
+                        <p>{lecture?.title}</p>
                       </div>
                     ))}
                 </CardContent>
@@ -74,9 +77,14 @@ const CourseDetails = () => {
             <Card>
               <CardContent className="p-4 flex flex-col">
                 <div className=" w-full aspect-video mb-4">
-                  React player video
+                 <ReactPlayer
+                 width={"100%"}
+                  height={"100%"}
+                  url={course?.lectures[0].videoUrl}
+                  controls={true}
+                 />
                 </div>
-                <h1>Lecture Title</h1>
+                <h1>{course?.lectures[0]?.title}</h1>
 
                 <Separator className="my-4" />
               </CardContent>

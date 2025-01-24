@@ -21,8 +21,21 @@ export const coursePurchaseApi = createApi({
                 method: "POST",
             }),
         }),
+        purchasedCoursesDetailsWithStatus: builder.query({
+            query: (courseId) => ({
+                url:`/courses/${courseId}/details-with-status`,
+                method: "GET",
+            }),
+        }),
+        getPurchasedCourses: builder.query({
+            query: () => ({
+                url:`/getPurchasedCourses`,
+                method: "GET",
+            }),
+        }),
+
     }),
 })
 
 
-export const {useCreateCheckoutSessionMutation, useStripeWebhookMutation} = coursePurchaseApi
+export const {useCreateCheckoutSessionMutation, useStripeWebhookMutation, useGetPurchasedCoursesQuery, usePurchasedCoursesDetailsWithStatusQuery} = coursePurchaseApi
