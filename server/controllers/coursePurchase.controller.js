@@ -19,7 +19,9 @@ export const createCheckoutSession = async (req, res) => {
     const amountInCents = Math.round(priceInUSD * 100); // Convert to cents
 
     if (amountInCents < 50) {
-      return res.status(400).json({ message: "The course price must be at least 50 cents." });
+      return res
+        .status(400)
+        .json({ message: "The course price must be at least 50 cents." });
     }
 
     // Create a new course purchase record
@@ -146,3 +148,41 @@ export const stripeWebhook = async (req, res) => {
   }
   res.status(200).send();
 };
+
+export const getCourseDetailsWithPurchaseStatus = async (req, res) => {
+  const { courseId } = req.params;
+  const userId = req.id;
+
+  const course = await Course.findById(courseId)
+    .populate({ path: "creater" })
+    .populate({ path: "lectures" });
+
+  if (!course) return res.status(404).json({ message: "Course not found" });
+
+  const purchase = await CoursePurchase.findOne({ courseId, userId });
+
+  res.status(200).json({
+    success: true,
+    message: "Course details with purchase status",
+    course,
+    purchase: !!purchase,
+  });
+};
+
+
+export const getPurchasedCourses = async (req, res) => {
+  const purchaseCourse = await CoursePurchase.find({status:"completed"})
+
+  if(!purchaseCourse) return res.status(404).json({
+    message:"No purchased courses found",
+    success:false,
+    purchaseCourse :[]
+  
+  })
+
+  res.status(200).json({
+    success: true,
+    message: "Purchased courses",
+    purchaseCourse,
+  });
+}
