@@ -13,18 +13,23 @@ import { usePurchasedCoursesDetailsWithStatusQuery } from "@/features/api/course
 import { BadgeInfo, Info, Lock, PlayCircle } from "lucide-react";
 import React from "react";
 import ReactPlayer from "react-player";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const CourseDetails = () => {
+  const navigate = useNavigate()
   const params = useParams()
   const courseId = params.courseId
   const {data, isLoading, error } = usePurchasedCoursesDetailsWithStatusQuery(courseId)
-  console.log(data)
   if(isLoading) return <div>Loading...</div>
   if(error) return <div>Error: {error.data.message}</div>
 
   const {course, purchase} = data
-  console.log(course?.lectures[0].videoUrl)
+
+  const handleNavigateToCourseProgressPage = () => {
+      if(purchase){
+        navigate(`/course-progress/${courseId}`)
+    }
+  }
   return (
     <div className="w-full overflow-x-hidden">
       <div className="min-h-60 bg-blue-700">
@@ -90,7 +95,7 @@ const CourseDetails = () => {
               </CardContent>
               <CardFooter>
                 {purchase ? (
-                  <Button className="w-full p-2 rounded-lg">
+                  <Button className="w-full p-2 rounded-lg" onClick={handleNavigateToCourseProgressPage}>
                     Continue Course
                   </Button>
                 ) : (

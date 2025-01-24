@@ -14,6 +14,7 @@ import UpdateCoursePage from './pages/admin/Courses/UpdateCoursePage';
 import AddLecturePage from './pages/admin/Lectures/AddLecturePage';
 import UpdateLecturePage from './pages/admin/Lectures/UpdateLecturePage';
 import CourseDetails from './pages/student/CourseDetails';
+import CourseProgress from './pages/student/CourseProgress';
 
 const AppLayout = () => (
   <>
@@ -39,19 +40,23 @@ const router = createBrowserRouter([
         </>
       },
       {
-        path: "/my-learning",
+        path: "my-learning",
         element: <MyLearning />,
       },
       {
-        path: "/profile",
+        path: "profile",
         element: <EditProfile />,
       },
       {
-        path: "/login",
+        path: "login",
         element: <Login />,
       },
       {
-        path: "/course-detail/:courseId",
+        path: "course-progress/:courseId",
+        element: <CourseProgress />,
+      },
+      {
+        path: "course-detail/:courseId",
         element: <CourseDetails />,
       },
 
