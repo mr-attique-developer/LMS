@@ -4,11 +4,12 @@ import { courseApi } from '@/features/api/courseApi';
 import rootReducer from './rootReducers';
 import { lectureApi } from '@/features/api/lectureApi';
 import { coursePurchaseApi } from '@/features/api/coursePurchaseApi';
+import { courseProgressApi } from '@/features/api/courseProgress';
 
 export const store = configureStore({
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(authApi.middleware, courseApi.middleware, lectureApi.middleware, coursePurchaseApi.middleware),
+    getDefaultMiddleware().concat(authApi.middleware, courseApi.middleware, lectureApi.middleware, coursePurchaseApi.middleware, courseProgressApi.middleware),
 });
 
 
