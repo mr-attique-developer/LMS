@@ -20,27 +20,27 @@ export const courseApi = createApi({
         method: "GET",
       }),
     }),
-    getSearchCourse:builder.query({
-      query: ({searchQuery, categories, sortByPrice}) => {
-        // Build qiery string
-        let queryString = `/search?query=${encodeURIComponent(searchQuery)}`
+    getSearchCourse: builder.query({
+      query: ({ searchQuery, categories, sortByPrice }) => {
+        // Build query string
+        let queryString = `/search?query=${encodeURIComponent(searchQuery)}`;
 
-        // append cateogry 
-        if(categories && categories.length > 0) {
+        // Append categories
+        if (categories && categories.length > 0) {
           const categoriesString = categories.map(encodeURIComponent).join(",");
-          queryString += `&categories=${categoriesString}`; 
+          queryString += `&categories=${categoriesString}`;
         }
 
-        // Append sortByPrice is available
-        if(sortByPrice){
-          queryString += `&sortByPrice=${encodeURIComponent(sortByPrice)}`; 
+        // Append sortByPrice if available
+        if (sortByPrice) {
+          queryString += `&sortByPrice=${encodeURIComponent(sortByPrice)}`;
         }
 
         return {
-          url:queryString,
-          method:"GET", 
-        }
-      }
+          url: queryString,
+          method: "GET",
+        };
+      },
     }),
     updateCreaterCourse: builder.mutation({
       query: ({ courseData, courseId }) => ({
@@ -56,7 +56,7 @@ export const courseApi = createApi({
       }),
     }),
     publishCourse: builder.mutation({
-      query: ({courseId, query}) => ({
+      query: ({ courseId, query }) => ({
         url: `/publishCourse/${courseId}?publish=${query}`,
         method: "PUT",
       }),
@@ -77,6 +77,5 @@ export const {
   useUpdateCreaterCourseMutation,
   useGetCouseByIdQuery,
   usePublishCourseMutation,
-  useGetPublishedCourseQuery
-  
+  useGetPublishedCourseQuery,
 } = courseApi;

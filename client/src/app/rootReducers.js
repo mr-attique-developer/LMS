@@ -4,7 +4,7 @@ import authReducer from '../features/authSlice';
 import {courseApi} from "@/features/api/courseApi"
 import { lectureApi } from '@/features/api/lectureApi';
 import { coursePurchaseApi } from '@/features/api/coursePurchaseApi';
-import { courseProgressApi } from '@/features/api/courseProgress';
+import { courseProgressApi } from '@/features/api/courseProgressApi';
 
 const rootReducer = combineReducers({
   [authApi.reducerPath]: authApi.reducer,

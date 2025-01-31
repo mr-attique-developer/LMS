@@ -63,46 +63,49 @@ export const getCreaterCoursesController = async (req, res) => {
 };
 
 
-export const searchCourse = async (req,res) => {
+export const searchCourse = async (req, res) => {
   try {
-      const {query = "", categories = [], sortByPrice =""} = req.query;
-      console.log(categories);
-      
-      // create search query
-      const searchCriteria = {
-          isPublished:true,
-          $or:[
-              {courseTitle: {$regex:query, $options:"i"}},
-              {subTitle: {$regex:query, $options:"i"}},
-              {category: {$regex:query, $options:"i"}},
-          ]
-      }
+    const { query = "", categories = [], sortByPrice = "" } = req.query;
 
-      // if categories selected
-      if(categories.length > 0) {
-          searchCriteria.category = {$in: categories};
-      }
+    // create search query
+    const searchCriteria = {
+      isPublished: true,
+      $or: [
+        { title: { $regex: query, $options: "i" } },
+        { subTitle: { $regex: query, $options: "i" } },
+        { category: { $regex: query, $options: "i" } },
+      ],
+    };
 
-      // define sorting order
-      const sortOptions = {};
-      if(sortByPrice === "low"){
-          sortOptions.coursePrice = 1;//sort by price in ascending
-      }else if(sortByPrice === "high"){
-          sortOptions.coursePrice = -1; // descending
-      }
+    // if categories selected
+    if (categories.length > 0) {
+      searchCriteria.category = { $in: categories };
+    }
 
-      let courses = await Course.find(searchCriteria).populate({path:"creater", select:"username photoUrl"}).sort(sortOptions);
+    // define sorting order
+    const sortOptions = {};
+    if (sortByPrice === "low") {
+      sortOptions.price = 1; // sort by price in ascending
+    } else if (sortByPrice === "high") {
+      sortOptions.price = -1; // sort by price in descending
+    }
 
-      return res.status(200).json({
-          success:true,
-          courses: courses || []
-      });
+    let courses = await Course.find(searchCriteria)
+      .populate({ path: "creater", select: "username photoUrl" })
+      .sort(sortOptions);
 
+    return res.status(200).json({
+      success: true,
+      courses: courses || [],
+    });
   } catch (error) {
-      console.log(error);
-      
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Error in search courses controller",
+    });
   }
-}
+};
 export const updateCreaterCourseController = async (req, res) => {
   try {
     const courseId = req.params.courseId;

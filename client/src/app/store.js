@@ -4,7 +4,7 @@ import { courseApi } from '@/features/api/courseApi';
 import rootReducer from './rootReducers';
 import { lectureApi } from '@/features/api/lectureApi';
 import { coursePurchaseApi } from '@/features/api/coursePurchaseApi';
-import { courseProgressApi } from '@/features/api/courseProgress';
+import { courseProgressApi } from '@/features/api/courseProgressApi';
 
 export const store = configureStore({
   reducer: rootReducer,

@@ -6,7 +6,7 @@ import {
   useMarkAsCompletedMutation,
   useMarkAsInCompletedMutation,
   useUpdateCourseProgressMutation,
-} from "@/features/api/courseProgress";
+} from "@/features/api/courseProgressApi";
 import { CheckCircle, CheckCircle2, PlayCircle } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";

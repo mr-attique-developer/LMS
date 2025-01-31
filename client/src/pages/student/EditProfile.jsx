@@ -22,7 +22,7 @@ const EditProfile = () => {
   //  geting user profile
 
   const { data, isLoading ,refetch} = useGetUserProfileQuery();
-  // console.log(data);
+  console.log(data);
   // User profile update 
   const [ updateUserProfile ,  {data:updateUserData, isLoading:updateUserIsLoading, isError, error, isSuccess,}] = useUpdateUserProfileMutation()
   const [username, setUsername] = useState("");
@@ -160,7 +160,7 @@ refetch()
             <h1 className="text-center text-xl">No courses enrolled yet</h1>
           ) : (
             data?.user?.enrolledCourses.map((course, index) => (
-              <SingleCourseComponent key={index} />
+              <SingleCourseComponent key={index} course={course}/>
             ))
           )}
         </div>

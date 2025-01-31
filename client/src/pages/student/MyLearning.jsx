@@ -1,10 +1,12 @@
 import React from 'react'
 import CourseSkeleton from './CourseSkeleton'
 import SingleCourseComponent from './SingleCourseComponent'
+import { useGetUserProfileQuery } from '@/features/api/authApi'
 
 const MyLearning = () => {
-    const myLearning = [1,2]
-    const isLoading = false
+   const {data, isLoading} = useGetUserProfileQuery()
+   console.log(data)
+   const myLearning = data?.user?.enrolledCourses || []
   return (
     <div className="max-w-4xl mx-auto my-10 px-4 md:px-0">
     <h1 className="font-bold text-2xl">MY LEARNING</h1>
@@ -15,7 +17,7 @@ const MyLearning = () => {
 
                 
                 myLearning.map((course, index) => (
-                    <CourseSkeleton key={index} />
+                    <CourseSkeleton key={index}  course={course} />
                 ))
             }
         </div>
@@ -24,7 +26,7 @@ const MyLearning = () => {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {myLearning.map((course, index) => (
-            <SingleCourseComponent key={index} />
+            <SingleCourseComponent key={index} course={course} />
           ))}
         </div>
       )}

@@ -17,11 +17,10 @@ const categories = [
   { id: "reactjs", label: "React JS" },
   { id: "javascript", label: "Javascript" },
   { id: "dataScience", label: "Data Science" },
-  { id: "frontend development", label: "Frontend Development" },
-  { id: "FullStackDevelopment", label: "Fullstack Development" },
-  { id: "MernStackDevelopment", label: "MERN Stack Development" },
+  { id: "frontendDevelopment", label: "Frontend Development" },
+  { id: "fullstackDevelopment", label: "Fullstack Development" },
+  { id: "mernStackDevelopment", label: "MERN Stack Development" },
   { id: "backendDevelopment", label: "Backend Development" },
-  { id: "javascript", label: "Javascript" },
   { id: "python", label: "Python" },
   { id: "docker", label: "Docker" },
   { id: "mongoDB", label: "MongoDB" },
@@ -39,16 +38,16 @@ const Filter = ({ handleFilterChange }) => {
         ? prevCategories.filter((id) => id !== categoryId)
         : [...prevCategories, categoryId];
 
-        handleFilterChange(newCategories, sortByPrice);
-        return newCategories;
+      handleFilterChange(newCategories, sortByPrice);
+      return newCategories;
     });
   };
 
   const selectByPriceHandler = (selectedValue) => {
     setSortByPrice(selectedValue);
-    console.log(selectedCategories)
     handleFilterChange(selectedCategories, selectedValue);
-  }
+  };
+
   return (
     <div className="w-full md:w-[20%]">
       <div className="flex items-center justify-between">
@@ -70,12 +69,15 @@ const Filter = ({ handleFilterChange }) => {
       <div>
         <h1 className="font-semibold mb-2">CATEGORY</h1>
         {categories.map((category) => (
-          <div className="flex items-center space-x-2 my-2">
+          <div key={category.id} className="flex items-center space-x-2 my-2">
             <Checkbox
               id={category.id}
               onCheckedChange={() => handleCategoryChange(category.id)}
             />
-            <Label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+            <Label
+              htmlFor={category.id}
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
               {category.label}
             </Label>
           </div>
