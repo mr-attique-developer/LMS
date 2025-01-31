@@ -88,6 +88,7 @@ if(getLectureByIdData){
   useEffect(()=>{
 if(isSuccess){
   toast.success(updateLectureData.message)
+  navigate(`/admin/courses/${courseId}/lecture`)
 }
 if(isError){
   toast.success(error?.data?.message)
@@ -168,7 +169,7 @@ console.log(isPreviewFree)
                 <p>{uploadProgress}% uploaded</p>
               </div>
             )}
-            <Button disabled={disableButton} onClick={handleUpdateLecture}>
+            <Button disabled={updateLectureIsLoading} onClick={handleUpdateLecture}>
               {
                 updateLectureIsLoading? <>
                 <Loader2 className="animate-spin"/> Wait Please

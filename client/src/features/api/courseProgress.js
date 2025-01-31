@@ -5,7 +5,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const courseProgressApi = createApi({
     reducerPath:"courseProgressApi",
     baseQuery:fetchBaseQuery({
-        baseUrl:"http://localhost:5000/api/v1/courseProgress",
+        baseUrl:"http://localhost:5000/api/v1/progress",
         credentials:"include"
     }),
     endpoints: (builder) =>({
@@ -22,14 +22,14 @@ export const courseProgressApi = createApi({
             })
         }),
         markAsCompleted: builder.mutation({
-            query:({courseId} ) =>({
+            query:(courseId ) =>({
                 url: `/markAsCompleted/${courseId}`,
                 method:"POST",
 
             })
         }),
         markAsInCompleted: builder.mutation({
-            query:({courseId} ) =>({
+            query:(courseId ) =>({
                 url: `/markAsInCompleted/${courseId}`,
                 method:"POST",
 
