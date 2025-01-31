@@ -79,10 +79,13 @@ const CreateCourse = () => {
                 <SelectItem value="mongoDB">MongoDB</SelectItem>
                 <SelectItem value="FullStackDevelopment">Full Stack Development</SelectItem>
                 <SelectItem value="MernStackDevelopment">MERN Stack Development</SelectItem>
+                <SelectItem value="frontendDevelopment">Front End Development</SelectItem>
+                <SelectItem value="backendDevelopment">Back End Development</SelectItem>
                 <SelectItem value="javascript">Javascript</SelectItem>
                 <SelectItem value="html">HTML</SelectItem>
                 <SelectItem value="css">Css</SelectItem>
                 <SelectItem value="redux">Redux & Redux toolkit</SelectItem>
+                <SelectItem value="dataScience">Data Science</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
