@@ -16,7 +16,7 @@ export const coursePurchaseApi = createApi({
     }),
     stripeWebhook: builder.mutation({
       query: () => ({
-        url: "/webhook",
+        url: "/course-purchase/webhook",
         method: "POST",
       }),
     }),

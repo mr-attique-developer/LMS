@@ -10,7 +10,7 @@ router.route("/get").get(isAthenicated , getCreaterCoursesController)
 router.route("/update/:courseId").put(isAthenicated ,multerUpload.single("courseThumbnail"), updateCreaterCourseController)
 router.route("/get/:courseId").get(isAthenicated, getCourseById)
 router.route("/publishCourse/:courseId").put(isAthenicated, togglePublishedCourseController)
-router.route("/getPublishedCourse").get(isAthenicated, getPublishedCoursesOnly)
+router.route("/getPublishedCourse").get( getPublishedCoursesOnly)
 
 
 export default router
