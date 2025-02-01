@@ -169,20 +169,19 @@ export const getCourseDetailsWithPurchaseStatus = async (req, res) => {
   });
 };
 
-
 export const getPurchasedCourses = async (req, res) => {
-  const purchaseCourse = await CoursePurchase.find({status:"completed"})
+  const purchaseCourse = await CoursePurchase.find({ status: "completed" }).populate("courseId");
 
-  if(!purchaseCourse) return res.status(404).json({
-    message:"No purchased courses found",
-    success:false,
-    purchaseCourse :[]
-  
-  })
+  if (!purchaseCourse)
+    return res.status(404).json({
+      message: "No purchased courses found",
+      success: false,
+      purchaseCourse: [],
+    });
 
   res.status(200).json({
     success: true,
     message: "Purchased courses",
     purchaseCourse,
   });
-}
+};

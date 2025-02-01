@@ -11,18 +11,7 @@ const lectureSchema = new mongoose.Schema({
   videoUrl: {
     type: String,
   },
-//   course: {
-//     type: mongoose.Schema.Types.ObjectId,
-//     ref: "Course",
-//   },
-//   creater: {
-//     type: mongoose.Schema.Types.ObjectId,
-//     ref: "User",
-//   },
-//   isPublished: {
-//     type: Boolean,
-//     default: false,
-//   },
+
   isPreviewFree: {
     type: Boolean,
     default: false,
